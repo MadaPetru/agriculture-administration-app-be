@@ -1,0 +1,40 @@
+plugins {
+    alias(libs.plugins.java)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+}
+
+group = 'ro.adi'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.web
+    implementation libs.jdbc
+    implementation libs.flyway.database.postgresql
+
+    runtimeOnly libs.postgresql
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    implementation libs.bundles.openapi
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
