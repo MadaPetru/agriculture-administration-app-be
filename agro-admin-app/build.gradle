@@ -1,0 +1,15 @@
+plugins {
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+}
+
+dependencies {
+    implementation project(':agro-admin-api')
+    implementation libs.bundles.mapstruct
+    annotationProcessor libs.bundles.mapstruct
+    implementation libs.jdbc
+    implementation libs.jpa
+    implementation libs.flyway.database.postgresql
+
+    runtimeOnly libs.postgresql
+}
