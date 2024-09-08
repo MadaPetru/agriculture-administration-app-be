@@ -9,6 +9,7 @@ mapstruct-processor = "1.5.5.Final"
 jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-jdbc" }
 jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
+oauth-resource-server = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server" }
 starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 data-commons = { group = "org.springframework.data", name = "spring-data-commons" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql" }

@@ -1,0 +1,5 @@
+1) docker ps to get the id of the container
+2) docker exec -it container_id /bin/sh
+3) cd opt/keycloak/bin
+4) ./kc.sh export --file {filename-to-be-exported-in-the-container} --realm {name-of-the-realm-that-will-be-extracted-in-the-file}
+5) docker cp container_id:/op/keycloak/bin/{filename-to-be-exported-in-the-container} ./path-on-the-actual-machine
