@@ -1,0 +1,85 @@
+package ro.adi.agroadmin.farming_land_operation_history.converter;
+
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistorySaveRequest;
+import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequest;
+import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequest;
+import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
+import ro.adi.agroadmin.farming_land_operation_history.jpa.entity.FarmingLandOperationHistoryEntity;
+import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerYearUpdateRequest;
+import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySaveRequestDto;
+import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequestDto;
+import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequestDto;
+import ro.adi.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponseDto;
+
+import java.time.ZoneId;
+import java.util.List;
+
+@Mapper(componentModel = "spring")
+public interface FarmingLandOperationHistoryMapper {
+
+    FarmingLandOperationHistorySaveRequest toFarmingLandOperationHistorySaveRequest(FarmingLandOperationHistorySaveRequestDto requestDto);
+
+    FarmingLandOperationHistoryUpdateRequest toFarmingLandOperationHistoryUpdateRequest(FarmingLandOperationHistoryUpdateRequestDto requestDto);
+
+    FarmingLandOperationHistoryEntity toFarmingLandOperationHistoryEntity(FarmingLandOperationHistoryUpdateRequest request);
+
+    FarmingLandOperationHistoryEntity toFarmingLandOperationHistoryEntity(FarmingLandOperationHistorySaveRequest request);
+
+    default FarmingLandOperationHistorySearchRequest toFarmingLandOperationHistorySearchRequest(FarmingLandOperationHistorySearchRequestDto requestDto) {
+        var pageRequestDto = requestDto.getPageable();
+        var pageRequest = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getSize());
+        return FarmingLandOperationHistorySearchRequest.builder()
+                .pageable(pageRequest)
+                .searchBy(requestDto.getSearchBy())
+                .build();
+    }
+
+    default FarmingLandsProfitabilityPerYearUpdateRequest toFarmingLandsProfitabilityPerYearUpdateRequest(FarmingLandOperationHistorySaveRequest request) {
+
+        return FarmingLandsProfitabilityPerYearUpdateRequest.builder()
+                .year(request.getAppliedAt().getYear())
+                .cost(request.getEstimatedCost())
+                .revenue(request.getEstimatedRevenue())
+                .createdBy(request.getCreatedBy())
+                .build();
+    }
+
+    default FarmingLandsProfitabilityPerYearUpdateRequest toFarmingLandsProfitabilityPerYearUpdateRequest(FarmingLandOperationHistoryUpdateRequest request, FarmingLandOperationHistoryResponse response) {
+
+        return FarmingLandsProfitabilityPerYearUpdateRequest.builder()
+                .year(request.getAppliedAt().toInstant().atZone(ZoneId.of("Europe/Bucharest")).getYear())
+                .cost(request.getEstimatedCost() - response.getEstimatedCost())
+                .revenue(request.getEstimatedRevenue() - response.getEstimatedRevenue())
+                .createdBy(request.getCreatedBy())
+                .build();
+    }
+
+    default FarmingLandsProfitabilityPerYearUpdateRequest toFarmingLandsProfitabilityPerYearUpdateRequest(FarmingLandOperationHistoryResponse response, String issuer) {
+
+        return FarmingLandsProfitabilityPerYearUpdateRequest.builder()
+                .year(response.getAppliedAt().getYear())
+                .cost(-response.getEstimatedCost())
+                .revenue(-response.getEstimatedRevenue())
+                .createdBy(issuer)
+                .build();
+    }
+
+    FarmingLandOperationHistoryResponse toFarmingLandOperationHistoryResponse(FarmingLandOperationHistoryEntity entity);
+    List<FarmingLandOperationHistoryResponse> toFarmingLandOperationHistoryResponses(List<FarmingLandOperationHistoryEntity> entities);
+
+    FarmingLandOperationHistoryResponseDto toFarmingLandOperationHistoryResponseDto(FarmingLandOperationHistoryResponse entity);
+
+    default PageImpl<FarmingLandOperationHistoryResponseDto> toPageImplFarmingLandOperationHistoryResponseDto(PageImpl<FarmingLandOperationHistoryResponse> responsePage) {
+        var responseDtoList = responsePage.stream().map(this::toFarmingLandOperationHistoryResponseDto).toList();
+        return new PageImpl<>(responseDtoList, responsePage.getPageable(), responsePage.getTotalElements());
+    }
+
+    default PageImpl<FarmingLandOperationHistoryResponse> toPageImplFarmingLandOperationHistoryResponse(Page<FarmingLandOperationHistoryEntity> entities) {
+        var responseList = entities.stream().map(this::toFarmingLandOperationHistoryResponse).toList();
+        return new PageImpl<>(responseList, entities.getPageable(), entities.getTotalElements());
+    }
+}

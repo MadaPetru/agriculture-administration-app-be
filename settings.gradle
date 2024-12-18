@@ -1,1 +1,3 @@
 rootProject.name = 'agriculture-administration-app-be'
+include 'agro-admin-api'
+include 'agro-admin-app'
