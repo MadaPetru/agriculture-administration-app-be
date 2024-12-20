@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.adi.agroadmin.common.entity.AreaUnitType;
 import ro.adi.agroadmin.common.exception.NotFoundException;
 import ro.adi.agroadmin.farming_land.converter.FarmingLandMapper;
 import ro.adi.agroadmin.farming_land.dto.request.FarmingLandSaveRequest;
@@ -24,6 +25,13 @@ public class FarmingLandServiceImpl implements FarmingLandService {
 
     private final FarmingLandMapper farmingLandMapper;
     private final FarmingLandRepository farmingLandRepository;
+
+    @Override
+    public Float getAreaInHaOfFieldsAdministrated(String username) {
+        var areaInHa = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(username, AreaUnitType.HM);
+        var areaInAr = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(username, AreaUnitType.AR);
+        return areaInHa + areaInAr / 100;
+    }
 
     @Override
     public PageImpl<FarmingLandResponse> search(FarmingLandSearchRequest request) {

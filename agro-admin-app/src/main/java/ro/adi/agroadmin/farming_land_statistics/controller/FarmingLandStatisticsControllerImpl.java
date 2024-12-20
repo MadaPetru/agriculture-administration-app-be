@@ -17,6 +17,11 @@ public class FarmingLandStatisticsControllerImpl implements FarmingLandStatistic
     private final FarmingLandStatisticsServiceInterceptor farmingLandStatisticsServiceInterceptor;
 
     @Override
+    public Float getAreaInHaOfFieldsAdministrated(String username) {
+        return farmingLandStatisticsServiceInterceptor.getAreaInHaOfFieldsAdministrated(username);
+    }
+
+    @Override
     public List<FarmingLandsProfitabilityPerYearResponseDto> revenueAndCostsPerYear(UserRequestDto requestDto, Integer startYear, Integer endYear) {
         return farmingLandStatisticsServiceInterceptor.revenueAndCostsPerYear(requestDto, startYear, endYear);
     }

@@ -3,6 +3,7 @@ package ro.adi.agroadmin.farming_land_statistics.service.interceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.adi.agroadmin.common.converter.UserMapper;
+import ro.adi.agroadmin.farming_land.service.FarmingLandService;
 import ro.adi.agroadmin.farming_land_operation_history.service.FarmingLandOperationHistoryService;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsMapper;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsPerYearAndOperationMapper;
@@ -20,8 +21,14 @@ public class FarmingLandStatisticsServiceInterceptorImpl implements FarmingLandS
     private final UserMapper userMapper;
     private final FarmingLandStatisticsMapper farmingLandStatisticsMapper;
     private final FarmingLandStatisticsPerYearAndOperationMapper farmingLandStatisticsPerYearAndOperationMapper;
+    private final FarmingLandService farmingLandService;
     private final FarmingLandStatisticsService farmingLandStatisticsService;
     private final FarmingLandOperationHistoryService farmingLandOperationHistoryService;
+
+    @Override
+    public Float getAreaInHaOfFieldsAdministrated(String username) {
+        return farmingLandService.getAreaInHaOfFieldsAdministrated(username);
+    }
 
     @Override
     public List<FarmingLandsProfitabilityPerOperationResponseDto> getProfitabilityPerOperations(UserRequestDto requestDto, Integer startYear, Integer endYear) {
