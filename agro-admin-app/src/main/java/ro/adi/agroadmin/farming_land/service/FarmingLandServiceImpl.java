@@ -9,13 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.AreaUnitType;
 import ro.adi.agroadmin.common.exception.NotFoundException;
 import ro.adi.agroadmin.farming_land.converter.FarmingLandMapper;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandSaveRequest;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandSearchRequest;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandUpdateRequest;
+import ro.adi.agroadmin.farming_land.dto.request.*;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
+import ro.adi.agroadmin.farming_land.jpa.FarmingLandImageRepository;
 import ro.adi.agroadmin.farming_land.jpa.FarmingLandRepository;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
 import ro.adi.agroadmin.farming_land.specification.FarmingLandSpecificationUtility;
+
+import java.util.List;
 
 @Log4j2
 @Service
@@ -25,6 +27,7 @@ public class FarmingLandServiceImpl implements FarmingLandService {
 
     private final FarmingLandMapper farmingLandMapper;
     private final FarmingLandRepository farmingLandRepository;
+    private final FarmingLandImageRepository farmingLandImageRepository;
 
     @Override
     public Float getAreaInHaOfFieldsAdministrated(String username) {
@@ -66,5 +69,20 @@ public class FarmingLandServiceImpl implements FarmingLandService {
         return farmingLandRepository.findByTitle(title)
                 .map(farmingLandMapper::toFarmingLandResponse)
                 .orElseThrow(() -> NotFoundException.getFarmingLandNotFoundByTitle(title));
+    }
+
+    @Override
+    @Transactional
+    public Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId) {
+        var entity = farmingLandMapper.toFarmingLandImageEntity(request);
+        entity.setFarmingLandId(farmingLandId);
+        entity.setCreatedBy("adi");//TODO when security get the loginName from token
+        return farmingLandImageRepository.save(entity).getId();
+    }
+
+    @Override
+    public List<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId) {
+        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndAndCreatedBy(farmingLandId, request.getStartDate(), request.getEndDate(), "adi");
+        return farmingLandMapper.toListFarmingLandImageResponse(entities);
     }
 }

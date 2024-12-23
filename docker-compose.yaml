@@ -2,15 +2,15 @@
 version: '3.9'
 
 services:
-#  app:
-#    image: 'agro-admin-be'
-#    build:
-#      context: .
-#    container_name: agro-admin-be
-#    depends_on:
-#      - db
-#    ports:
-#      - "8080:8080"
+  #  app:
+  #    image: 'agro-admin-be'
+  #    build:
+  #      context: .
+  #    container_name: agro-admin-be
+  #    depends_on:
+  #      - db
+  #    ports:
+  #      - "8080:8080"
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     restart: always
@@ -25,6 +25,19 @@ services:
       MSSQL_DISABLE_ENCRYPTION: 'true'  # Disables encryption (optional, may not always apply)
     volumes:
       - sqlserver:/var/opt/mssql
-
+  azure_blob_storage:
+    image: mcr.microsoft.com/azure-storage/azurite
+    restart: always
+    container_name: agro-admin-blob-storage
+    environment:
+      AZURE_STORAGE_ACCOUNT: 'adi'
+      AZURE_STORAGE_KEY: 'key'
+      AZURITE_ACCOUNTS: 'adi:key'
+    ports:
+      - '10000:10000'
+      - '10001:10001'
+      - '10002:10002'
+    volumes:
+      - ./azurite:/workspace
 volumes:
   sqlserver:

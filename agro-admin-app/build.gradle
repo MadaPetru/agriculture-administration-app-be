@@ -7,11 +7,9 @@ dependencies {
     implementation project(':agro-admin-api')
     implementation libs.bundles.mapstruct
     annotationProcessor libs.bundles.mapstruct
-//    implementation libs.jdbc
     implementation libs.azure.sql.dbc
     implementation libs.flyway.database.sqlserver
     implementation libs.jpa
-//    implementation libs.flyway.database.postgresql
-
-    runtimeOnly libs.postgresql
+    implementation libs.azure.blob
+    implementation libs.tenserflow
 }

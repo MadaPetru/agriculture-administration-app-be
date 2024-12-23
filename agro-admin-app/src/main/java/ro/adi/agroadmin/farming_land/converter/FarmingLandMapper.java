@@ -5,21 +5,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandSaveRequest;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandSearchRequest;
-import ro.adi.agroadmin.farming_land.dto.request.FarmingLandUpdateRequest;
+import ro.adi.agroadmin.farming_land.dto.request.*;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
-import ro.adi.farming_land.dto.request.FarmingLandSaveRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandSearchRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandUpdateRequestDto;
+import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandImageEntity;
+import ro.adi.farming_land.dto.request.*;
+import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FarmingLandMapper {
     FarmingLandSaveRequest toFarmingLandSaveRequest(FarmingLandSaveRequestDto requestDto);
 
     FarmingLandEntity toFarmingLandEntity(FarmingLandSaveRequest request);
+
+    FarmingLandImageEntity toFarmingLandImageEntity(UploadFieldImageRequest request);
+
+    UploadFieldImageRequest toUploadFieldImageRequest(UploadFieldImageRequestDto request);
+
+    ListFieldImageRequest toListFieldImageRequest(ListFieldImageRequestDto request);
 
     FarmingLandUpdateRequest toFarmingLandUpdateRequest(FarmingLandUpdateRequestDto requestDto);
 
@@ -28,6 +36,9 @@ public interface FarmingLandMapper {
     FarmingLandResponse toFarmingLandResponse(FarmingLandEntity entity);
 
     FarmingLandResponseDto toFarmingLandResponseDto(FarmingLandResponse response);
+
+    List<FarmingLandImageResponse> toListFarmingLandImageResponse(List<FarmingLandImageEntity> entities);
+    List<FarmingLandImageBlobResponseDto> toListFarmingLandImageBlobResponseDto(List<FarmingLandImageBlobResponse> responses);
 
     default FarmingLandSearchRequest toFarmingLandSearchRequest(FarmingLandSearchRequestDto requestDto) {
         var pageRequestDto = requestDto.getPageable();

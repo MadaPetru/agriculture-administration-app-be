@@ -5,10 +5,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.RestController;
 import ro.adi.agroadmin.farming_land.service.interceptor.FarmingLandServiceInterceptor;
 import ro.adi.farming_land.controller.FarmingLandController;
-import ro.adi.farming_land.dto.request.FarmingLandSaveRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandSearchRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandUpdateRequestDto;
+import ro.adi.farming_land.dto.request.*;
+import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,5 +40,15 @@ public class FarmingLandControllerImpl implements FarmingLandController {
     @Override
     public FarmingLandResponseDto findFarmingLandByTitle(String title) {
         return farmingLandServiceInterceptor.findFarmingLandByTitle(title);
+    }
+
+    @Override
+    public void uploadFile(UploadFieldImageRequestDto requestDto, Integer farmingLandId) {
+        farmingLandServiceInterceptor.uploadFile(requestDto, farmingLandId);
+    }
+
+    @Override
+    public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
+        return farmingLandServiceInterceptor.listFiles(requestDto, farmingLandId);
     }
 }

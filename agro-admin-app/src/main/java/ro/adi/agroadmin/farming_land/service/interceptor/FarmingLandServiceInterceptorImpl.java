@@ -7,15 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.OperationType;
 import ro.adi.agroadmin.farming_land.converter.FarmingLandMapper;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.service.FarmingLandService;
 import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
 import ro.adi.agroadmin.farming_land_operation_history.service.FarmingLandOperationHistoryService;
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerOperationAndYearUpdateRequest;
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerYearUpdateRequest;
 import ro.adi.agroadmin.farming_land_statistics.service.FarmingLandStatisticsService;
-import ro.adi.farming_land.dto.request.FarmingLandSaveRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandSearchRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandUpdateRequestDto;
+import ro.adi.agroadmin.file.FileService;
+import ro.adi.farming_land.dto.request.*;
+import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 
 import java.util.Collection;
@@ -28,6 +30,7 @@ import java.util.List;
 public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInterceptor {
 
     private final FarmingLandMapper farmingLandMapper;
+    private final FileService fileService;
     private final FarmingLandService farmingLandService;
     private final FarmingLandStatisticsService farmingLandStatisticsService;
     private final FarmingLandOperationHistoryService farmingLandOperationHistoryService;
@@ -67,6 +70,23 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     public FarmingLandResponseDto findFarmingLandByTitle(String title) {
         var response = farmingLandService.findFarmingLandByTitle(title);
         return farmingLandMapper.toFarmingLandResponseDto(response);
+    }
+
+    @Override
+    @Transactional
+    public void uploadFile(UploadFieldImageRequestDto requestDto, Integer farmingLandId) {
+        var request = farmingLandMapper.toUploadFieldImageRequest(requestDto);
+        var id = farmingLandService.uploadFile(request, farmingLandId);
+        fileService.uploadBlob(id, request.getContent());
+    }
+
+    @Override
+    public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
+        var request = farmingLandMapper.toListFieldImageRequest(requestDto);
+        var responses = farmingLandService.listFiles(request, farmingLandId);
+        var blobs = responses.stream().map(FarmingLandImageResponse::getId).map(Object::toString).toList();
+        var files = fileService.listFiles(blobs);
+        return farmingLandMapper.toListFarmingLandImageBlobResponseDto(files);
     }
 
     private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {

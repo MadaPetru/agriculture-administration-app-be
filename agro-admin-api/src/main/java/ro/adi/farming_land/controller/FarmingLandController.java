@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
-import ro.adi.farming_land.dto.request.FarmingLandSaveRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandSearchRequestDto;
-import ro.adi.farming_land.dto.request.FarmingLandUpdateRequestDto;
+import ro.adi.farming_land.dto.request.*;
+import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
+
+import java.util.List;
 
 @RequestMapping(path = "/v1/farming-lands")
 public interface FarmingLandController {
@@ -22,8 +23,14 @@ public interface FarmingLandController {
     void updateFarmingLand(@RequestBody FarmingLandUpdateRequestDto requestDto);
 
     @DeleteMapping("/issuer/{issuer}/id/{id}")
-    void deleteFarmingLandById(@PathVariable @Valid @NotNull Integer id,@PathVariable @Valid @NotNull String issuer);
+    void deleteFarmingLandById(@PathVariable @Valid @NotNull Integer id, @PathVariable @Valid @NotNull String issuer);
 
     @GetMapping("/title/{title}")
     FarmingLandResponseDto findFarmingLandByTitle(@PathVariable @Valid @NotBlank String title);
+
+    @PostMapping("/{farmingLandId}/files")
+    void uploadFile(@RequestBody UploadFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
+
+    @PostMapping("/{farmingLandId}/files/list")
+    List<FarmingLandImageBlobResponseDto> listFiles(@RequestBody ListFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
 }

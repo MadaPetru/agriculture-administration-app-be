@@ -5,23 +5,20 @@ openapi-starter-webmvc-ui = "2.5.0"
 openapi-starter-webflux-ui = "2.5.0"
 map-struct = "1.5.5.Final"
 mapstruct-processor = "1.5.5.Final"
-database-postgresql = "42.7.4"
-azure-sql-dbc = "12.9.0.jre11-preview"
-flyway-database-sqlserver = "11.1.0"
+tenserflow = "1.0.0"
+azure-blob = "12.29.0"
 [libraries]
-jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-jdbc" }
+tenserflow = { group = "org.tensorflow", name = "tensorflow-core-api", version.ref = "tenserflow" }
+azure-blob = { group = "com.azure", name = "azure-storage-blob", version.ref = "azure-blob" }
 azure-sql-dbc = { group = "com.microsoft.sqlserver", name = "mssql-jdbc" }
 jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
 starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 data-commons = { group = "org.springframework.data", name = "spring-data-commons" }
-flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql" }
 flyway-database-sqlserver = { group = "org.flywaydb", name = "flyway-sqlserver" }
-database-postgresql = { group = "org.postgresql", name = "postgresql" }
 lombok = { group = "org.projectlombok", name = "lombok" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "map-struct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct-processor" }
-postgresql = { group = "org.postgresql", name = "postgresql" }
 starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 openapi-starter-webmvc-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "openapi-starter-webmvc-ui" }
 openapi-starter-webflux-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webflux-ui", version.ref = "openapi-starter-webflux-ui" }
