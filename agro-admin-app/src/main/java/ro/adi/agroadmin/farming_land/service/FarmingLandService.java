@@ -24,4 +24,6 @@ public interface FarmingLandService {
     Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId);
 
     List<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId);
+
+    void deleteFile(Integer id);
 }

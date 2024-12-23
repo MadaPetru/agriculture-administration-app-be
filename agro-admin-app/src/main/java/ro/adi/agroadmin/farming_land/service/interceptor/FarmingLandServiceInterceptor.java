@@ -21,4 +21,6 @@ public interface FarmingLandServiceInterceptor {
     void uploadFile(UploadFieldImageRequestDto requestDto, Integer farmingLandId);
 
     List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId);
+
+    void deleteFile(Integer id);
 }

@@ -85,4 +85,10 @@ public class FarmingLandServiceImpl implements FarmingLandService {
         var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndAndCreatedBy(farmingLandId, request.getStartDate(), request.getEndDate(), "adi");
         return farmingLandMapper.toListFarmingLandImageResponse(entities);
     }
+
+    @Override
+    @Transactional
+    public void deleteFile(Integer id) {
+        farmingLandImageRepository.deleteById(id);
+    }
 }

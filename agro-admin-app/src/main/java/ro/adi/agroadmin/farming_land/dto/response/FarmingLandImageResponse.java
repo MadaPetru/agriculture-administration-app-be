@@ -9,5 +9,6 @@ import java.time.LocalDateTime;
 @Builder
 public class FarmingLandImageResponse {
     private Integer id;
+    private String fileName;
     private LocalDateTime at;
 }

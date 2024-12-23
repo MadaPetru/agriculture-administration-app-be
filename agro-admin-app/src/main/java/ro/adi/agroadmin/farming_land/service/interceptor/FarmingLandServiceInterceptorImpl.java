@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.OperationType;
 import ro.adi.agroadmin.farming_land.converter.FarmingLandMapper;
-import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.service.FarmingLandService;
 import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
@@ -23,6 +22,7 @@ import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -84,9 +84,20 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         var request = farmingLandMapper.toListFieldImageRequest(requestDto);
         var responses = farmingLandService.listFiles(request, farmingLandId);
-        var blobs = responses.stream().map(FarmingLandImageResponse::getId).map(Object::toString).toList();
-        var files = fileService.listFiles(blobs);
+        var imagesByBlob = responses.stream()
+                .collect(Collectors.toMap(
+                        FarmingLandImageResponse::getId,
+                        response -> response
+                ));
+        var files = fileService.listFiles(imagesByBlob);
         return farmingLandMapper.toListFarmingLandImageBlobResponseDto(files);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFile(Integer id) {
+        farmingLandService.deleteFile(id);
+        fileService.deleteFile(id);
     }
 
     private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {

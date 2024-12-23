@@ -33,4 +33,7 @@ public interface FarmingLandController {
 
     @PostMapping("/{farmingLandId}/files/list")
     List<FarmingLandImageBlobResponseDto> listFiles(@RequestBody ListFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
+
+    @DeleteMapping("/files/{id}")
+    void deleteFile(@PathVariable Integer id);
 }

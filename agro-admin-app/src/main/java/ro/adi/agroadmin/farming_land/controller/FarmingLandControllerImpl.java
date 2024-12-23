@@ -51,4 +51,9 @@ public class FarmingLandControllerImpl implements FarmingLandController {
     public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         return farmingLandServiceInterceptor.listFiles(requestDto, farmingLandId);
     }
+
+    @Override
+    public void deleteFile(Integer id) {
+        farmingLandServiceInterceptor.deleteFile(id);
+    }
 }
