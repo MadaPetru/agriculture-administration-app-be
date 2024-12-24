@@ -11,4 +11,5 @@ public class ListFieldImageRequestDto {
 
     private Date endDate;
     private Date startDate;
+    private ListFieldImagePageableRequestDto pageable;
 }

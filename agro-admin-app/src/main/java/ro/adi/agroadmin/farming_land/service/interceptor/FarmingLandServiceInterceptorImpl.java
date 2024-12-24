@@ -1,6 +1,7 @@
 package ro.adi.agroadmin.farming_land.service.interceptor;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -81,16 +82,16 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     }
 
     @Override
-    public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
+    public Page<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         var request = farmingLandMapper.toListFieldImageRequest(requestDto);
-        var responses = farmingLandService.listFiles(request, farmingLandId);
-        var imagesByBlob = responses.stream()
+        var pageResponses = farmingLandService.listFiles(request, farmingLandId);
+        var imagesByBlob = pageResponses.getContent().stream()
                 .collect(Collectors.toMap(
                         FarmingLandImageResponse::getId,
                         response -> response
                 ));
         var files = fileService.listFiles(imagesByBlob);
-        return farmingLandMapper.toListFarmingLandImageBlobResponseDto(files);
+        return farmingLandMapper.toPageFarmingLandImageBlobResponseDto(files,pageResponses.getPageable(),pageResponses.getTotalElements());
     }
 
     @Override

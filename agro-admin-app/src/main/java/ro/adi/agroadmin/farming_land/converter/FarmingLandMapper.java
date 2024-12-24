@@ -1,10 +1,7 @@
 package ro.adi.agroadmin.farming_land.converter;
 
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import ro.adi.agroadmin.farming_land.dto.request.*;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
@@ -15,6 +12,8 @@ import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -27,7 +26,15 @@ public interface FarmingLandMapper {
 
     UploadFieldImageRequest toUploadFieldImageRequest(UploadFieldImageRequestDto request);
 
-    ListFieldImageRequest toListFieldImageRequest(ListFieldImageRequestDto request);
+    default ListFieldImageRequest toListFieldImageRequest(ListFieldImageRequestDto requestDto) {
+        var pageRequestDto = requestDto.getPageable();
+        var pageRequest = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getSize());
+        return ListFieldImageRequest.builder()
+                .startDate(LocalDateTime.ofInstant(requestDto.getStartDate().toInstant(), ZoneId.of("UTC")))
+                .endDate(LocalDateTime.ofInstant(requestDto.getEndDate().toInstant(), ZoneId.of("UTC")))
+                .pageable(pageRequest)
+                .build();
+    }
 
     FarmingLandUpdateRequest toFarmingLandUpdateRequest(FarmingLandUpdateRequestDto requestDto);
 
@@ -37,8 +44,19 @@ public interface FarmingLandMapper {
 
     FarmingLandResponseDto toFarmingLandResponseDto(FarmingLandResponse response);
 
+    default Page<FarmingLandImageResponse> toListFarmingLandImageResponse(Page<FarmingLandImageEntity> entities) {
+        var responseDtoList = toListFarmingLandImageResponse(entities.getContent());
+        return new PageImpl<>(responseDtoList, entities.getPageable(), entities.getTotalElements());
+    }
+
     List<FarmingLandImageResponse> toListFarmingLandImageResponse(List<FarmingLandImageEntity> entities);
+
     List<FarmingLandImageBlobResponseDto> toListFarmingLandImageBlobResponseDto(List<FarmingLandImageBlobResponse> responses);
+
+    default Page<FarmingLandImageBlobResponseDto> toPageFarmingLandImageBlobResponseDto(List<FarmingLandImageBlobResponse> responses, Pageable pageable, long totalElements) {
+        var responsesDto = toListFarmingLandImageBlobResponseDto(responses);
+        return new PageImpl<>(responsesDto, pageable, totalElements);
+    }
 
     default FarmingLandSearchRequest toFarmingLandSearchRequest(FarmingLandSearchRequestDto requestDto) {
         var pageRequestDto = requestDto.getPageable();

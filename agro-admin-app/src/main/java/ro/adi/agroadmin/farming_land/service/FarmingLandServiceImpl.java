@@ -17,8 +17,6 @@ import ro.adi.agroadmin.farming_land.jpa.FarmingLandRepository;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
 import ro.adi.agroadmin.farming_land.specification.FarmingLandSpecificationUtility;
 
-import java.util.List;
-
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -81,8 +79,8 @@ public class FarmingLandServiceImpl implements FarmingLandService {
     }
 
     @Override
-    public List<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId) {
-        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndAndCreatedBy(farmingLandId, request.getStartDate(), request.getEndDate(), "adi");
+    public Page<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId) {
+        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndCreatedByOrderByAtDesc(farmingLandId, request.getStartDate(), request.getEndDate(), "adi", request.getPageable());
         return farmingLandMapper.toListFarmingLandImageResponse(entities);
     }
 

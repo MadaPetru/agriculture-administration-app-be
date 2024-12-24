@@ -1,6 +1,7 @@
 package ro.adi.agroadmin.farming_land.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.RestController;
 import ro.adi.agroadmin.farming_land.service.interceptor.FarmingLandServiceInterceptor;
@@ -48,7 +49,7 @@ public class FarmingLandControllerImpl implements FarmingLandController {
     }
 
     @Override
-    public List<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
+    public Page<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         return farmingLandServiceInterceptor.listFiles(requestDto, farmingLandId);
     }
 

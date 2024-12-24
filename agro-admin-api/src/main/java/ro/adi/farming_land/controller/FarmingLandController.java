@@ -3,13 +3,12 @@ package ro.adi.farming_land.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
-
-import java.util.List;
 
 @RequestMapping(path = "/v1/farming-lands")
 public interface FarmingLandController {
@@ -32,7 +31,7 @@ public interface FarmingLandController {
     void uploadFile(@RequestBody UploadFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
 
     @PostMapping("/{farmingLandId}/files/list")
-    List<FarmingLandImageBlobResponseDto> listFiles(@RequestBody ListFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
+    Page<FarmingLandImageBlobResponseDto> listFiles(@RequestBody ListFieldImageRequestDto requestDto, @PathVariable Integer farmingLandId);
 
     @DeleteMapping("/files/{id}")
     void deleteFile(@PathVariable Integer id);

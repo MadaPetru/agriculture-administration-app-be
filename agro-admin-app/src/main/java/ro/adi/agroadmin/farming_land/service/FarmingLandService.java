@@ -1,5 +1,6 @@
 package ro.adi.agroadmin.farming_land.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import ro.adi.agroadmin.farming_land.dto.request.*;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
@@ -23,7 +24,7 @@ public interface FarmingLandService {
 
     Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId);
 
-    List<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId);
+    Page<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId);
 
     void deleteFile(Integer id);
 }
