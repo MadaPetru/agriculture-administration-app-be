@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "3.4.1"
+spring-boot = "3.3.1"
 spring-dependency-management = "1.1.5"
 openapi-starter-webmvc-ui = "2.5.0"
 openapi-starter-webflux-ui = "2.5.0"
@@ -8,7 +8,6 @@ mapstruct-processor = "1.5.5.Final"
 tenserflow = "1.0.0"
 azure-blob = "12.29.0"
 [libraries]
-spring-cloud-azure-config = { group = "com.azure.spring", name = "azure-spring-cloud-appconfiguration-config-web" }
 tenserflow = { group = "org.tensorflow", name = "tensorflow-core-api", version.ref = "tenserflow" }
 azure-blob = { group = "com.azure", name = "azure-storage-blob", version.ref = "azure-blob" }
 azure-sql-dbc = { group = "com.microsoft.sqlserver", name = "mssql-jdbc" }

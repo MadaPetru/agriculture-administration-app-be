@@ -12,13 +12,4 @@ dependencies {
     implementation libs.jpa
     implementation libs.azure.blob
     implementation libs.tenserflow
-    implementation 'com.microsoft.azure:azure-client-runtime:1.7.14'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.2.0'
-    implementation 'com.azure.spring:spring-cloud-azure-appconfiguration-config'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "com.azure.spring:spring-cloud-azure-dependencies:5.19.0"
-    }
 }

@@ -3,16 +3,8 @@ plugins {
     alias(libs.plugins.spring.dependency.management)
 }
 
-dependencies {
-    implementation 'com.azure.spring:spring-cloud-azure-appconfiguration-config'
-}
+dependencies {}
 
 springBoot {
     mainClass = 'ro.adi.agroadmin.AgricultureAdministrationAppBeApplication'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "com.azure.spring:spring-cloud-azure-dependencies:5.19.0"
-    }
 }
