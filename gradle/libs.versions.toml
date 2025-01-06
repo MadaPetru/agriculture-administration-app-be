@@ -9,6 +9,8 @@ tenserflow = "1.0.0"
 azure-blob = "12.29.0"
 [libraries]
 tenserflow = { group = "org.tensorflow", name = "tensorflow-core-api", version.ref = "tenserflow" }
+oauth2-resource-server = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server" }
+security-config = { group = "org.springframework.security", name = "spring-security-config" }
 azure-blob = { group = "com.azure", name = "azure-storage-blob", version.ref = "azure-blob" }
 azure-sql-dbc = { group = "com.microsoft.sqlserver", name = "mssql-jdbc" }
 jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }

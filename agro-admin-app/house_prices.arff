@@ -1,0 +1,11 @@
+@relation house_prices
+@attribute size numeric
+@attribute price numeric
+@data
+1000,150000
+1200,180000
+1500,225000
+1800,270000
+2000,300000
+2500,375000
+3000,450000
