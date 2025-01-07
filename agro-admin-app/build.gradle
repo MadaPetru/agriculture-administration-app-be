@@ -10,9 +10,13 @@ dependencies {
     implementation libs.azure.sql.dbc
     implementation libs.flyway.database.sqlserver
     implementation libs.jpa
-    implementation libs.oauth2.resource.server
-    implementation libs.security.config
+//    implementation libs.security.config
+    implementation libs.security.core
     implementation libs.azure.blob
     implementation libs.tenserflow
     implementation 'nz.ac.waikato.cms.weka:weka-stable:3.8.6'
+    implementation libs.jwt.api
+    runtimeOnly libs.jwt.impl
+    runtimeOnly libs.jwt.jackson
+
 }
