@@ -6,10 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ro.adi.user.dto.common.SessionDetailsResponseDto;
 
-
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserLoginResponseDto extends SessionDetailsResponseDto {
+public class UserRegisterResponseDto extends SessionDetailsResponseDto {
 }

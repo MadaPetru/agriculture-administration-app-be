@@ -1,4 +1,4 @@
-package ro.adi.agroadmin.user.dto.response;
+package ro.adi.agroadmin.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginResponse {
+public class RegisterUserRequest {
+
     private String email;
+    private String password;
+    private String fullName;
 }

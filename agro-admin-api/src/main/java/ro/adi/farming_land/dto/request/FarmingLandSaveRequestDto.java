@@ -14,8 +14,6 @@ public class FarmingLandSaveRequestDto {
     private Float area;
     @NotBlank
     private String title;
-    @NotBlank
-    private String createdBy;
     @NotNull
     private AreaUnitTypeDto areaUnitType;
     @NotNull

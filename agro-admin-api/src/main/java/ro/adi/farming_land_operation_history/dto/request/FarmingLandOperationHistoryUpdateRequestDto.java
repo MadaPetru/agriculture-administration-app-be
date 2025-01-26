@@ -1,6 +1,5 @@
 package ro.adi.farming_land_operation_history.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -17,8 +16,6 @@ public class FarmingLandOperationHistoryUpdateRequestDto {
     private Integer version;
     @NotNull
     private Date appliedAt;
-    @NotBlank
-    private String createdBy;
     @NotNull
     private Float estimatedCost;
     @NotNull

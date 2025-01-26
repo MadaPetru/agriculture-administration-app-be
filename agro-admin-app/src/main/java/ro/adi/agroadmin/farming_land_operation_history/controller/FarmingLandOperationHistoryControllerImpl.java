@@ -33,8 +33,8 @@ public class FarmingLandOperationHistoryControllerImpl implements FarmingLandOpe
     }
 
     @Override
-    public void deleteFarmingLandOperationHistoryById(Integer id, String issuer) {
-        farmingLandOperationHistoryServiceInterceptor.deleteFarmingLandOperationHistoryById(id,issuer);
+    public void deleteFarmingLandOperationHistoryById(Integer id) {
+        farmingLandOperationHistoryServiceInterceptor.deleteFarmingLandOperationHistoryById(id);
     }
 
     @Override

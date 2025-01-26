@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.OperationType;
@@ -15,6 +16,7 @@ import ro.adi.agroadmin.farming_land_operation_history.service.FarmingLandOperat
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerOperationAndYearUpdateRequest;
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerYearUpdateRequest;
 import ro.adi.agroadmin.farming_land_statistics.service.FarmingLandStatisticsService;
+import ro.adi.agroadmin.farming_land_statistics.updates.statistics_per_operation_and_year.UpdateFarmingLandStatisticsPerYearAndOperationEmitter;
 import ro.adi.agroadmin.file.FileService;
 import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
@@ -24,6 +26,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ro.adi.agroadmin.farming_land_statistics.updates.statistics_per_operation_and_year.UpdateFarmingLandStatisticsPerYearAndOperationScenario.DELETE_FIELD;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +39,7 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     private final FarmingLandService farmingLandService;
     private final FarmingLandStatisticsService farmingLandStatisticsService;
     private final FarmingLandOperationHistoryService farmingLandOperationHistoryService;
+    private final UpdateFarmingLandStatisticsPerYearAndOperationEmitter updateFarmingLandStatisticsPerYearAndOperationEmitter;
 
     @Override
     public PageImpl<FarmingLandResponseDto> search(FarmingLandSearchRequestDto requestDto) {
@@ -59,10 +64,11 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
 
     @Override
     @Transactional
-    public void deleteFarmingLandById(Integer id, String issuer) {
+    public void deleteFarmingLandById(Integer id) {
         var operations = farmingLandOperationHistoryService.findOperationHistoriesByFarmingLandId(id);
         farmingLandOperationHistoryService.deleteFarmingLandOperationHistoriesByFarmingLandId(id);
         farmingLandService.deleteFarmingLandById(id);
+        var issuer = SecurityContextHolder.getContext().getAuthentication().getName();
         updateFarmingLandStatisticsPerYear(operations, issuer);
         updateFarmingLandStatisticsPerOperationAndYear(operations, issuer);
     }
@@ -91,7 +97,7 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
                         response -> response
                 ));
         var files = fileService.listFiles(imagesByBlob);
-        return farmingLandMapper.toPageFarmingLandImageBlobResponseDto(files,pageResponses.getPageable(),pageResponses.getTotalElements());
+        return farmingLandMapper.toPageFarmingLandImageBlobResponseDto(files, pageResponses.getPageable(), pageResponses.getTotalElements());
     }
 
     @Override
@@ -103,7 +109,9 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
 
     private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {
         var updateRequestsForStatisticsPerOperationAndYearForFarmingLands = getUpdateRequestsForFarmingLandStatisticsPerOperationAndYear(issuer, operations);
-        updateRequestsForStatisticsPerOperationAndYearForFarmingLands.forEach(farmingLandStatisticsService::update);
+        updateRequestsForStatisticsPerOperationAndYearForFarmingLands.forEach(updateRequestPerYearAndOperation -> {
+            updateFarmingLandStatisticsPerYearAndOperationEmitter.emitUpdate(DELETE_FIELD, updateRequestPerYearAndOperation);
+        });
     }
 
     private void updateFarmingLandStatisticsPerYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {

@@ -5,7 +5,6 @@ import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOp
 import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequest;
 import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequest;
 import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
-import ro.adi.agroadmin.farming_land_statistics.dto.request.UserRequest;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerOperationResponse;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerYearResponse;
 
@@ -26,8 +25,8 @@ public interface FarmingLandOperationHistoryService {
 
     List<FarmingLandOperationHistoryResponse> findOperationHistoriesByFarmingLandId(Integer farmingLandId);
 
-    List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYearForFarmingLand(UserRequest request, Integer startYear, Integer endYear, Integer farmingLandId);
+    List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYearForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId);
 
-    List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperationsForFarmingLand(UserRequest request, Integer startYear, Integer endYear, Integer farmingLandId);
+    List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperationsForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId);
 
 }

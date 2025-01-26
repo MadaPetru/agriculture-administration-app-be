@@ -4,6 +4,11 @@ import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import ro.adi.agroadmin.common.entity.CurrencyType;
+import ro.adi.agroadmin.common.entity.OperationType;
+import ro.adi.agroadmin.common.entity.PlantType;
+import ro.adi.agroadmin.common.entity.WeightMeasureType;
 import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistorySaveRequest;
 import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequest;
 import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequest;
@@ -15,15 +20,49 @@ import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHis
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequestDto;
 import ro.adi.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponseDto;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FarmingLandOperationHistoryMapper {
 
-    FarmingLandOperationHistorySaveRequest toFarmingLandOperationHistorySaveRequest(FarmingLandOperationHistorySaveRequestDto requestDto);
+    default FarmingLandOperationHistorySaveRequest toFarmingLandOperationHistorySaveRequest(FarmingLandOperationHistorySaveRequestDto requestDto) {
+        FarmingLandOperationHistorySaveRequest.FarmingLandOperationHistorySaveRequestBuilder farmingLandOperationHistorySaveRequest = FarmingLandOperationHistorySaveRequest.builder();
+        farmingLandOperationHistorySaveRequest.operation(OperationType.valueOf(requestDto.getOperation().name()));
+        farmingLandOperationHistorySaveRequest.estimatedCost(requestDto.getEstimatedCost());
+        farmingLandOperationHistorySaveRequest.estimatedRevenue(requestDto.getEstimatedRevenue());
+        farmingLandOperationHistorySaveRequest.estimatedHarvest(requestDto.getEstimatedHarvest());
+        if (requestDto.getAppliedAt() != null) {
+            farmingLandOperationHistorySaveRequest.appliedAt(LocalDateTime.ofInstant(requestDto.getAppliedAt().toInstant(), ZoneId.of("UTC")));
+        }
+        farmingLandOperationHistorySaveRequest.farmingLandId(requestDto.getFarmingLandId());
+        farmingLandOperationHistorySaveRequest.estimatedHarvestMeasureType(WeightMeasureType.valueOf(requestDto.getEstimatedHarvestMeasureType().name()));
+        farmingLandOperationHistorySaveRequest.estimatedCostCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedCostCurrencyType().name()));
+        farmingLandOperationHistorySaveRequest.plantType(PlantType.valueOf(requestDto.getPlantType().name()));
+        farmingLandOperationHistorySaveRequest.estimatedRevenueCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedRevenueCurrencyType().name()));
+        farmingLandOperationHistorySaveRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        return farmingLandOperationHistorySaveRequest.build();
+    }
 
-    FarmingLandOperationHistoryUpdateRequest toFarmingLandOperationHistoryUpdateRequest(FarmingLandOperationHistoryUpdateRequestDto requestDto);
+    default FarmingLandOperationHistoryUpdateRequest toFarmingLandOperationHistoryUpdateRequest(FarmingLandOperationHistoryUpdateRequestDto requestDto) {
+        FarmingLandOperationHistoryUpdateRequest.FarmingLandOperationHistoryUpdateRequestBuilder farmingLandOperationHistoryUpdateRequest = FarmingLandOperationHistoryUpdateRequest.builder();
+
+        farmingLandOperationHistoryUpdateRequest.id(requestDto.getId());
+        farmingLandOperationHistoryUpdateRequest.version(requestDto.getVersion());
+        farmingLandOperationHistoryUpdateRequest.appliedAt(requestDto.getAppliedAt());
+        farmingLandOperationHistoryUpdateRequest.operation(OperationType.valueOf(requestDto.getOperation().name()));
+        farmingLandOperationHistoryUpdateRequest.estimatedCost(requestDto.getEstimatedCost());
+        farmingLandOperationHistoryUpdateRequest.farmingLandId(requestDto.getFarmingLandId());
+        farmingLandOperationHistoryUpdateRequest.estimatedHarvest(requestDto.getEstimatedHarvest());
+        farmingLandOperationHistoryUpdateRequest.estimatedRevenue(requestDto.getEstimatedRevenue());
+        farmingLandOperationHistoryUpdateRequest.plantType(PlantType.valueOf(requestDto.getPlantType().name()));
+        farmingLandOperationHistoryUpdateRequest.estimatedCostCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedCostCurrencyType().name()));
+        farmingLandOperationHistoryUpdateRequest.estimatedHarvestMeasureType(WeightMeasureType.valueOf(requestDto.getEstimatedHarvestMeasureType().name()));
+        farmingLandOperationHistoryUpdateRequest.estimatedRevenueCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedRevenueCurrencyType().name()));
+        farmingLandOperationHistoryUpdateRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        return farmingLandOperationHistoryUpdateRequest.build();
+    }
 
     FarmingLandOperationHistoryEntity toFarmingLandOperationHistoryEntity(FarmingLandOperationHistoryUpdateRequest request);
 
@@ -69,6 +108,7 @@ public interface FarmingLandOperationHistoryMapper {
     }
 
     FarmingLandOperationHistoryResponse toFarmingLandOperationHistoryResponse(FarmingLandOperationHistoryEntity entity);
+
     List<FarmingLandOperationHistoryResponse> toFarmingLandOperationHistoryResponses(List<FarmingLandOperationHistoryEntity> entities);
 
     FarmingLandOperationHistoryResponseDto toFarmingLandOperationHistoryResponseDto(FarmingLandOperationHistoryResponse entity);

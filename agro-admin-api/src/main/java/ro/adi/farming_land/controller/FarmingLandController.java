@@ -21,8 +21,8 @@ public interface FarmingLandController {
     @PutMapping
     void updateFarmingLand(@RequestBody FarmingLandUpdateRequestDto requestDto);
 
-    @DeleteMapping("/issuer/{issuer}/id/{id}")
-    void deleteFarmingLandById(@PathVariable @Valid @NotNull Integer id, @PathVariable @Valid @NotNull String issuer);
+    @DeleteMapping("/id/{id}")
+    void deleteFarmingLandById(@PathVariable @Valid @NotNull Integer id);
 
     @GetMapping("/title/{title}")
     FarmingLandResponseDto findFarmingLandByTitle(@PathVariable @Valid @NotBlank String title);

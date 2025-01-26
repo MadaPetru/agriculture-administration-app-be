@@ -2,6 +2,9 @@ package ro.adi.agroadmin.farming_land.converter;
 
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import ro.adi.agroadmin.common.entity.AreaUnitType;
+import ro.adi.agroadmin.common.entity.DistanceUnitType;
 import ro.adi.agroadmin.farming_land.dto.request.*;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
@@ -18,7 +21,16 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FarmingLandMapper {
-    FarmingLandSaveRequest toFarmingLandSaveRequest(FarmingLandSaveRequestDto requestDto);
+    default FarmingLandSaveRequest toFarmingLandSaveRequest(FarmingLandSaveRequestDto requestDto) {
+        FarmingLandSaveRequest.FarmingLandSaveRequestBuilder farmingLandSaveRequest = FarmingLandSaveRequest.builder();
+        farmingLandSaveRequest.title(requestDto.getTitle());
+        farmingLandSaveRequest.area(requestDto.getArea());
+        farmingLandSaveRequest.roughlyDistanceFromFarm(requestDto.getRoughlyDistanceFromFarm());
+        farmingLandSaveRequest.areaUnitType(AreaUnitType.valueOf(requestDto.getAreaUnitType().name()));
+        farmingLandSaveRequest.roughlyDistanceFromFarmUnitType(DistanceUnitType.valueOf(requestDto.getRoughlyDistanceFromFarmUnitType().name()));
+        farmingLandSaveRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        return farmingLandSaveRequest.build();
+    }
 
     FarmingLandEntity toFarmingLandEntity(FarmingLandSaveRequest request);
 
@@ -36,7 +48,18 @@ public interface FarmingLandMapper {
                 .build();
     }
 
-    FarmingLandUpdateRequest toFarmingLandUpdateRequest(FarmingLandUpdateRequestDto requestDto);
+    default FarmingLandUpdateRequest toFarmingLandUpdateRequest(FarmingLandUpdateRequestDto requestDto) {
+        FarmingLandUpdateRequest.FarmingLandUpdateRequestBuilder farmingLandUpdateRequest = FarmingLandUpdateRequest.builder();
+        farmingLandUpdateRequest.id(requestDto.getId());
+        farmingLandUpdateRequest.version(requestDto.getVersion());
+        farmingLandUpdateRequest.area(requestDto.getArea());
+        farmingLandUpdateRequest.title(requestDto.getTitle());
+        farmingLandUpdateRequest.areaUnitType(AreaUnitType.valueOf(requestDto.getAreaUnitType().name()));
+        farmingLandUpdateRequest.roughlyDistanceFromFarm(requestDto.getRoughlyDistanceFromFarm());
+        farmingLandUpdateRequest.roughlyDistanceFromFarmUnitType(DistanceUnitType.valueOf(requestDto.getRoughlyDistanceFromFarmUnitType().name()));
+        farmingLandUpdateRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        return farmingLandUpdateRequest.build();
+    }
 
     FarmingLandEntity toFarmingLandEntity(FarmingLandUpdateRequest request);
 

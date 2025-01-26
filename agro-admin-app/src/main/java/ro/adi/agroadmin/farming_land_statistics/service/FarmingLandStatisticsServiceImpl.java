@@ -1,13 +1,12 @@
 package ro.adi.agroadmin.farming_land_statistics.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ro.adi.agroadmin.farming_land_operation_history.jpa.FarmingLandOperationHistoryRepository;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsMapper;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsPerYearAndOperationMapper;
-import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerOperationAndYearUpdateRequest;
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerYearUpdateRequest;
-import ro.adi.agroadmin.farming_land_statistics.dto.request.UserRequest;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerOperationResponse;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerYearResponse;
 import ro.adi.agroadmin.farming_land_statistics.jpa.FarmingLandStatisticsRepository;
@@ -26,14 +25,16 @@ public class FarmingLandStatisticsServiceImpl implements FarmingLandStatisticsSe
     private final FarmingLandsStatisticsPerOperationAndYearRepository farmingLandsStatisticsPerOperationAndYearRepository;
 
     @Override
-    public List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYear(UserRequest request, Integer startYear, Integer endYear) {
-        var entities = farmingLandStatisticsRepository.findFarmingLandStatisticsPerYearEntitiesByCreatedByAndYearBetween(request.getCreatedBy(), startYear, endYear);
+    public List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYear(Integer startYear, Integer endYear) {
+        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        var entities = farmingLandStatisticsRepository.findFarmingLandStatisticsPerYearEntitiesByCreatedByAndYearBetween(user, startYear, endYear);
         return farmingLandStatisticsMapper.toListFarmingLandsProfitabilityPerYearResponse(entities);
     }
 
     @Override
-    public List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperations(UserRequest request, Integer startYear, Integer endYear) {
-        var entities = farmingLandsStatisticsPerOperationAndYearRepository.findAllByYearBetweenAndCreatedBy(startYear, endYear, request.getCreatedBy());
+    public List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperations(Integer startYear, Integer endYear) {
+        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        var entities = farmingLandsStatisticsPerOperationAndYearRepository.findAllByYearBetweenAndCreatedBy(startYear, endYear, user);
         return farmingLandStatisticsPerYearAndOperationMapper.toListFarmingLandsProfitabilityPerOperationResponse(entities);
     }
 
@@ -52,22 +53,5 @@ public class FarmingLandStatisticsServiceImpl implements FarmingLandStatisticsSe
             entityToBeUpdated.setRevenue(entityToBeUpdated.getRevenue() + existentEntity.getRevenue());
         }
         farmingLandStatisticsRepository.save(entityToBeUpdated);
-    }
-
-    @Override
-    public void update(FarmingLandsProfitabilityPerOperationAndYearUpdateRequest request) {
-        if (!farmingLandOperationHistoryRepository.existsByYearAndCreatedByAndOperation(request.getYear(), request.getCreatedBy(), request.getOperation())) {
-            farmingLandsStatisticsPerOperationAndYearRepository.deleteByYearAndOperationAndCreatedBy(request.getYear(), request.getOperation(), request.getCreatedBy());
-            return;
-        }
-        var entityToBeUpdated = farmingLandStatisticsPerYearAndOperationMapper.toFarmingLandsStatisticsPerOperationAndYearEntityForSave(request);
-        var optionalEntity = farmingLandsStatisticsPerOperationAndYearRepository.findFarmingLandStatisticsPerYearEntityByYearAndCreatedByAndOperation(request.getYear(), request.getCreatedBy(), request.getOperation());
-        if (optionalEntity.isPresent()) {
-            var existentEntity = optionalEntity.get();
-            entityToBeUpdated.setVersion(existentEntity.getVersion());
-            entityToBeUpdated.setCost(entityToBeUpdated.getCost() + existentEntity.getCost());
-            entityToBeUpdated.setRevenue(entityToBeUpdated.getRevenue() + existentEntity.getRevenue());
-        }
-        farmingLandsStatisticsPerOperationAndYearRepository.save(entityToBeUpdated);
     }
 }

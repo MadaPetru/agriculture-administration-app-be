@@ -25,8 +25,6 @@ public class FarmingLandOperationHistorySaveRequestDto {
     private Float estimatedRevenue;
     @NotNull
     private Date appliedAt;
-    @NotBlank
-    private String createdBy;
     @NotNull
     private Integer farmingLandId;
     @NotNull

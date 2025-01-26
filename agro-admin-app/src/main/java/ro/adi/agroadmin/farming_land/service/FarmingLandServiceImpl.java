@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.AreaUnitType;
@@ -28,9 +29,10 @@ public class FarmingLandServiceImpl implements FarmingLandService {
     private final FarmingLandImageRepository farmingLandImageRepository;
 
     @Override
-    public Float getAreaInHaOfFieldsAdministrated(String username) {
-        var areaInHa = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(username, AreaUnitType.HM);
-        var areaInAr = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(username, AreaUnitType.AR);
+    public Float getAreaInHaOfFieldsAdministrated() {
+        var administratedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        var areaInHa = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(administratedBy, AreaUnitType.HM);
+        var areaInAr = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(administratedBy, AreaUnitType.AR);
         return areaInHa + areaInAr / 100;
     }
 

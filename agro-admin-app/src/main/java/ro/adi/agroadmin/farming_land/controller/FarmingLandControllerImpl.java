@@ -10,8 +10,6 @@ import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class FarmingLandControllerImpl implements FarmingLandController {
@@ -34,8 +32,8 @@ public class FarmingLandControllerImpl implements FarmingLandController {
     }
 
     @Override
-    public void deleteFarmingLandById(Integer id, String issuer) {
-        farmingLandServiceInterceptor.deleteFarmingLandById(id, issuer);
+    public void deleteFarmingLandById(Integer id) {
+        farmingLandServiceInterceptor.deleteFarmingLandById(id);
     }
 
     @Override

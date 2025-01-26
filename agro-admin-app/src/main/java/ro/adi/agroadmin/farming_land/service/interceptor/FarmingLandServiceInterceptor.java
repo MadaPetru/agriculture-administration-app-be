@@ -6,8 +6,6 @@ import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 
-import java.util.List;
-
 public interface FarmingLandServiceInterceptor {
     PageImpl<FarmingLandResponseDto> search(FarmingLandSearchRequestDto requestDto);
 
@@ -15,7 +13,7 @@ public interface FarmingLandServiceInterceptor {
 
     void updateFarmingLand(FarmingLandUpdateRequestDto requestDto);
 
-    void deleteFarmingLandById(Integer id, String issuer);
+    void deleteFarmingLandById(Integer id);
 
     FarmingLandResponseDto findFarmingLandByTitle(String title);
 

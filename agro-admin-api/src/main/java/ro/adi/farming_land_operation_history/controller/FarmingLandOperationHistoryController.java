@@ -20,8 +20,8 @@ public interface FarmingLandOperationHistoryController {
     @PutMapping
     void updateFarmingLandOperationHistory(@RequestBody FarmingLandOperationHistoryUpdateRequestDto requestDto);
 
-    @DeleteMapping("/issuer/{issuer}/id/{id}")
-    void deleteFarmingLandOperationHistoryById(@PathVariable @Valid @NotNull Integer id, @PathVariable @Valid @NotNull String issuer);
+    @DeleteMapping("/id/{id}")
+    void deleteFarmingLandOperationHistoryById(@PathVariable @Valid @NotNull Integer id);
 
     @GetMapping("/id/{id}")
     FarmingLandOperationHistoryResponseDto findFarmingLandOperationHistoryById(@PathVariable @Valid @NotNull Integer id);

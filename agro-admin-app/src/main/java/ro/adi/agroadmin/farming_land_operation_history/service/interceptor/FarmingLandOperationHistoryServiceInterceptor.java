@@ -10,6 +10,6 @@ public interface FarmingLandOperationHistoryServiceInterceptor {
     void saveFarmingLandOperationHistory(FarmingLandOperationHistorySaveRequestDto requestDto);
     PageImpl<FarmingLandOperationHistoryResponseDto> search(FarmingLandOperationHistorySearchRequestDto requestDto);
     void updateFarmingLandOperationHistory(FarmingLandOperationHistoryUpdateRequestDto requestDto);
-    void deleteFarmingLandOperationHistoryById(Integer id, String issuer);
+    void deleteFarmingLandOperationHistoryById(Integer id);
     FarmingLandOperationHistoryResponseDto findFarmingLandOperationHistoryById(Integer id);
 }

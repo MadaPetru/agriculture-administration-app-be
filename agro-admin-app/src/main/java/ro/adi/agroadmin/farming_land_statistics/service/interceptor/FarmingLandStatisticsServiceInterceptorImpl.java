@@ -2,13 +2,11 @@ package ro.adi.agroadmin.farming_land_statistics.service.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.adi.agroadmin.common.converter.UserMapper;
 import ro.adi.agroadmin.farming_land.service.FarmingLandService;
 import ro.adi.agroadmin.farming_land_operation_history.service.FarmingLandOperationHistoryService;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsMapper;
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsPerYearAndOperationMapper;
 import ro.adi.agroadmin.farming_land_statistics.service.FarmingLandStatisticsService;
-import ro.adi.common.dto.request.UserRequestDto;
 import ro.adi.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerOperationResponseDto;
 import ro.adi.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerYearResponseDto;
 
@@ -18,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FarmingLandStatisticsServiceInterceptorImpl implements FarmingLandStatisticsServiceInterceptor {
 
-    private final UserMapper userMapper;
     private final FarmingLandStatisticsMapper farmingLandStatisticsMapper;
     private final FarmingLandStatisticsPerYearAndOperationMapper farmingLandStatisticsPerYearAndOperationMapper;
     private final FarmingLandService farmingLandService;
@@ -26,35 +23,31 @@ public class FarmingLandStatisticsServiceInterceptorImpl implements FarmingLandS
     private final FarmingLandOperationHistoryService farmingLandOperationHistoryService;
 
     @Override
-    public Float getAreaInHaOfFieldsAdministrated(String username) {
-        return farmingLandService.getAreaInHaOfFieldsAdministrated(username);
+    public Float getAreaInHaOfFieldsAdministrated() {
+        return farmingLandService.getAreaInHaOfFieldsAdministrated();
     }
 
     @Override
-    public List<FarmingLandsProfitabilityPerOperationResponseDto> getProfitabilityPerOperations(UserRequestDto requestDto, Integer startYear, Integer endYear) {
-        var user = userMapper.toUserRequest(requestDto);
-        var responses = farmingLandStatisticsService.getProfitabilityPerOperations(user, startYear, endYear);
+    public List<FarmingLandsProfitabilityPerOperationResponseDto> getProfitabilityPerOperations(Integer startYear, Integer endYear) {
+        var responses = farmingLandStatisticsService.getProfitabilityPerOperations(startYear, endYear);
         return farmingLandStatisticsPerYearAndOperationMapper.toListFarmingLandsProfitabilityPerOperationResponseDto(responses);
     }
 
     @Override
-    public List<FarmingLandsProfitabilityPerYearResponseDto> revenueAndCostsPerYear(UserRequestDto requestDto, Integer startYear, Integer endYear) {
-        var request = userMapper.toUserRequest(requestDto);
-        var responses = farmingLandStatisticsService.revenueAndCostsPerYear(request, startYear, endYear);
+    public List<FarmingLandsProfitabilityPerYearResponseDto> revenueAndCostsPerYear(Integer startYear, Integer endYear) {
+        var responses = farmingLandStatisticsService.revenueAndCostsPerYear(startYear, endYear);
         return farmingLandStatisticsMapper.toListFarmingLandsProfitabilityPerYearResponseDto(responses);
     }
 
     @Override
-    public List<FarmingLandsProfitabilityPerYearResponseDto> revenueAndCostsPerYearForFarmingLand(UserRequestDto requestDto, Integer startYear, Integer endYear, Integer farmingLandId) {
-        var user = userMapper.toUserRequest(requestDto);
-        var responses = farmingLandOperationHistoryService.revenueAndCostsPerYearForFarmingLand(user, startYear, endYear, farmingLandId);
+    public List<FarmingLandsProfitabilityPerYearResponseDto> revenueAndCostsPerYearForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId) {
+        var responses = farmingLandOperationHistoryService.revenueAndCostsPerYearForFarmingLand(startYear, endYear, farmingLandId);
         return farmingLandStatisticsMapper.toListFarmingLandsProfitabilityPerYearResponseDto(responses);
     }
 
     @Override
-    public List<FarmingLandsProfitabilityPerOperationResponseDto> getProfitabilityPerOperationsForFarmingLand(UserRequestDto requestDto, Integer startYear, Integer endYear, Integer farmingLandId) {
-        var user = userMapper.toUserRequest(requestDto);
-        var responses = farmingLandOperationHistoryService.getProfitabilityPerOperationsForFarmingLand(user, startYear, endYear, farmingLandId);
+    public List<FarmingLandsProfitabilityPerOperationResponseDto> getProfitabilityPerOperationsForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId) {
+        var responses = farmingLandOperationHistoryService.getProfitabilityPerOperationsForFarmingLand(startYear, endYear, farmingLandId);
         return farmingLandStatisticsPerYearAndOperationMapper.toListFarmingLandsProfitabilityPerOperationResponseDto(responses);
     }
 }

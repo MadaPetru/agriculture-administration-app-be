@@ -26,4 +26,7 @@ public interface FarmingLandOperationHistoryRepository extends JpaSpecificationE
 
     @Query(value = "select count(*) > 0 from FarmingLandOperationHistoryEntity as operation where year(operation.appliedAt) = :year and operation.createdBy = :createdBy and operation.operation = :operation")
     boolean existsByYearAndCreatedByAndOperation(Integer year, String createdBy, OperationType operation);
+
+    @Query(value = "select count(*) from FarmingLandOperationHistoryEntity as operation where year(operation.appliedAt) = :year and operation.createdBy = :createdBy and operation.operation = :operation")
+    int countByYearAndCreatedByAndOperation(Integer year, String createdBy, OperationType operation);
 }

@@ -6,11 +6,9 @@ import ro.adi.agroadmin.farming_land.dto.request.*;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
 
-import java.util.List;
-
 public interface FarmingLandService {
 
-    Float getAreaInHaOfFieldsAdministrated(String username);
+    Float getAreaInHaOfFieldsAdministrated();
 
     PageImpl<FarmingLandResponse> search(FarmingLandSearchRequest requestDto);
 

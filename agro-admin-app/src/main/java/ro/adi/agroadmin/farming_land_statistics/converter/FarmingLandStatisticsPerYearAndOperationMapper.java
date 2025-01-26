@@ -55,6 +55,28 @@ public interface FarmingLandStatisticsPerYearAndOperationMapper {
                 .build();
     }
 
+    default FarmingLandsProfitabilityPerOperationAndYearUpdateRequest toFarmingLandsProfitabilityPerYearAndOperationUpdateRequestForChangingOldOperation(FarmingLandOperationHistoryResponse response) {
+
+        return FarmingLandsProfitabilityPerOperationAndYearUpdateRequest.builder()
+                .year(response.getAppliedAt().getYear())
+                .cost(-response.getEstimatedCost())
+                .revenue(- response.getEstimatedRevenue())
+                .createdBy(response.getCreatedBy())
+                .operation(response.getOperation())
+                .build();
+    }
+
+    default FarmingLandsProfitabilityPerOperationAndYearUpdateRequest toFarmingLandsProfitabilityPerYearAndOperationUpdateRequestForUpdatingOperation(FarmingLandOperationHistoryUpdateRequest request) {
+
+        return FarmingLandsProfitabilityPerOperationAndYearUpdateRequest.builder()
+                .year(request.getAppliedAt().toInstant().atZone(ZoneId.of("Europe/Bucharest")).getYear())
+                .cost(request.getEstimatedCost())
+                .revenue(request.getEstimatedRevenue())
+                .createdBy(request.getCreatedBy())
+                .operation(request.getOperation())
+                .build();
+    }
+
     default FarmingLandsProfitabilityPerOperationAndYearUpdateRequest toFarmingLandsProfitabilityPerYearAndOperationUpdateRequest(FarmingLandOperationHistoryResponse response, String issuer) {
 
         return FarmingLandsProfitabilityPerOperationAndYearUpdateRequest.builder()
