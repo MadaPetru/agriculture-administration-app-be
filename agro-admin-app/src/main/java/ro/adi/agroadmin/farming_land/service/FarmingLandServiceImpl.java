@@ -76,13 +76,15 @@ public class FarmingLandServiceImpl implements FarmingLandService {
     public Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId) {
         var entity = farmingLandMapper.toFarmingLandImageEntity(request);
         entity.setFarmingLandId(farmingLandId);
-        entity.setCreatedBy("adi");//TODO when security get the loginName from token
+        var userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        entity.setCreatedBy(userEmail);
         return farmingLandImageRepository.save(entity).getId();
     }
 
     @Override
     public Page<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId) {
-        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndCreatedByOrderByAtDesc(farmingLandId, request.getStartDate(), request.getEndDate(), "adi", request.getPageable());
+        var userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndCreatedByOrderByAtDesc(farmingLandId, request.getStartDate(), request.getEndDate(), userEmail, request.getPageable());
         return farmingLandMapper.toListFarmingLandImageResponse(entities);
     }
 
