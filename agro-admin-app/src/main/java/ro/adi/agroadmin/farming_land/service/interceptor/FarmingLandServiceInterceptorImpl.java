@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.OperationType;
 import ro.adi.agroadmin.farming_land.converter.FarmingLandMapper;
+import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageBlobResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.service.FarmingLandService;
 import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
@@ -22,9 +23,7 @@ import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ro.adi.agroadmin.farming_land_statistics.updates.statistics_per_operation_and_year.UpdateFarmingLandStatisticsPerYearAndOperationScenario.DELETE_FIELD;
@@ -40,6 +39,8 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     private final FarmingLandStatisticsService farmingLandStatisticsService;
     private final FarmingLandOperationHistoryService farmingLandOperationHistoryService;
     private final UpdateFarmingLandStatisticsPerYearAndOperationEmitter updateFarmingLandStatisticsPerYearAndOperationEmitter;
+
+    private final static Map<Integer, String> fileCache = new HashMap<>();
 
     @Override
     public PageImpl<FarmingLandResponseDto> search(FarmingLandSearchRequestDto requestDto) {
@@ -91,12 +92,13 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     public Page<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         var request = farmingLandMapper.toListFieldImageRequest(requestDto);
         var pageResponses = farmingLandService.listFiles(request, farmingLandId);
-        var imagesByBlob = pageResponses.getContent().stream()
-                .collect(Collectors.toMap(
-                        FarmingLandImageResponse::getId,
-                        response -> response
-                ));
+        var imageResponses = pageResponses.getContent();
+        var imageToSearchAfterThatAreNotInCache = getImagesToSearchAfterThatAreNotInCache(imageResponses);
+        var imagesByBlob = groupImagesToSearchAfterByBlob(imageToSearchAfterThatAreNotInCache);
+        var imagesThatAreFoundInCache = getImagesThatAreFoundInCache(imageResponses);
         var files = fileService.listFiles(imagesByBlob);
+        files.addAll(imagesThatAreFoundInCache);
+        updateImageCache(files);
         return farmingLandMapper.toPageFarmingLandImageBlobResponseDto(files, pageResponses.getPageable(), pageResponses.getTotalElements());
     }
 
@@ -105,6 +107,43 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     public void deleteFile(Integer id) {
         farmingLandService.deleteFile(id);
         fileService.deleteFile(id);
+        fileCache.remove(id);
+    }
+
+    private List<FarmingLandImageBlobResponse> getImagesThatAreFoundInCache(List<FarmingLandImageResponse> imageResponses) {
+        var imagesThatAreFoundInCache = new ArrayList<FarmingLandImageBlobResponse>();
+        for (var imageEntity : imageResponses) {
+            var imageId = imageEntity.getId();
+            if (!fileCache.containsKey(imageId)) continue;
+            var file = new FarmingLandImageBlobResponse();
+            file.setId(imageId);
+            file.setFileName(imageEntity.getFileName());
+            file.setContent(fileCache.get(imageId));
+            file.setAt(imageEntity.getAt());
+            imagesThatAreFoundInCache.add(file);
+        }
+        return imagesThatAreFoundInCache;
+    }
+
+    private void updateImageCache(List<FarmingLandImageBlobResponse> files) {
+        files.forEach(file -> fileCache.put(file.getId(), file.getContent()));
+    }
+
+    private Map<Integer, FarmingLandImageResponse> groupImagesToSearchAfterByBlob(ArrayList<FarmingLandImageResponse> imageToSearchAfterThatAreNotInCache) {
+        return imageToSearchAfterThatAreNotInCache.stream()
+                .collect(Collectors.toMap(
+                        FarmingLandImageResponse::getId,
+                        response -> response
+                ));
+    }
+
+    private ArrayList<FarmingLandImageResponse> getImagesToSearchAfterThatAreNotInCache(List<FarmingLandImageResponse> imageResponses) {
+        var imageToSearchAfterThatAreNotInCache = new ArrayList<FarmingLandImageResponse>();
+        for (var imageEntity : imageResponses) {
+            if (fileCache.containsKey(imageEntity.getId())) continue;
+            imageToSearchAfterThatAreNotInCache.add(imageEntity);
+        }
+        return imageToSearchAfterThatAreNotInCache;
     }
 
     private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {
