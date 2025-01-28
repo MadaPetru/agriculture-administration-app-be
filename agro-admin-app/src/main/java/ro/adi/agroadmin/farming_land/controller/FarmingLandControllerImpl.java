@@ -1,6 +1,8 @@
 package ro.adi.agroadmin.farming_land.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,11 +44,13 @@ public class FarmingLandControllerImpl implements FarmingLandController {
     }
 
     @Override
+    @CacheEvict(value = "farmingLandFiles", allEntries = true)
     public void uploadFile(UploadFieldImageRequestDto requestDto, Integer farmingLandId) {
         farmingLandServiceInterceptor.uploadFile(requestDto, farmingLandId);
     }
 
     @Override
+    @Cacheable(value = "farmingLandFiles", keyGenerator = "listFieldImageRequestDtoKeyGenerator")
     public Page<FarmingLandImageBlobResponseDto> listFiles(ListFieldImageRequestDto requestDto, Integer farmingLandId) {
         return farmingLandServiceInterceptor.listFiles(requestDto, farmingLandId);
     }

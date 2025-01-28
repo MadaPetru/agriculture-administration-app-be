@@ -11,4 +11,13 @@ import ro.adi.common.dto.request.PageRequestDto;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ListFieldImagePageableRequestDto extends PageRequestDto {
+
+    @Override
+    public String toString() {
+        return "PageRequestDto{" +
+                "page=" + getPage() +
+                ", size=" + getSize() +
+                ", direction=" + getDirection() +
+                '}';
+    }
 }
