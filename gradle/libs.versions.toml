@@ -15,7 +15,6 @@ security-core = { group = "org.springframework.boot", name = "spring-boot-starte
 azure-blob = { group = "com.azure", name = "azure-storage-blob", version.ref = "azure-blob" }
 azure-sql-dbc = { group = "com.microsoft.sqlserver", name = "mssql-jdbc" }
 jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
-redis = { group = "org.springframework.boot", name = "spring-boot-starter-data-redis" }
 web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
 jwt-api = { group = "io.jsonwebtoken", name = "jjwt-api", version.ref = "jwt" }
 jwt-impl = { group = "io.jsonwebtoken", name = "jjwt-impl", version.ref = "jwt" }

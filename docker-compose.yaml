@@ -41,14 +41,6 @@ services:
       - '10002:10002'
     volumes:
       - ./azurite:/workspace
-  redis:
-    container_name: agro-admin-cache
-    image: redis
-    ports:
-      - '6379:6379'
-    command: [ "redis-server", "--appendonly", "yes" ] # Enables AOF persistence
-    volumes:
-      - 'redis_data:/data'
 
 #  keycloak:
 #    container_name: keycloak-agro-admin
@@ -67,7 +59,5 @@ services:
 volumes:
   sqlserver:
   keycloak:
-  redis_data:
-    driver: local
 networks:
   agro-admin-network:

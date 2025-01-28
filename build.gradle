@@ -29,7 +29,6 @@ allprojects {
         compileOnly libs.lombok
         annotationProcessor libs.lombok
         implementation libs.bundles.spring
-        implementation libs.redis
         implementation libs.bundles.openapi
         implementation libs.starter.validation
         testImplementation libs.starter.test
