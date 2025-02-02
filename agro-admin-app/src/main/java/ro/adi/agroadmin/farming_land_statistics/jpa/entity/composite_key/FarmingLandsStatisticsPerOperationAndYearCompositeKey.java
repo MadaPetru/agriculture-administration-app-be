@@ -13,6 +13,6 @@ import java.io.Serializable;
 public class FarmingLandsStatisticsPerOperationAndYearCompositeKey implements Serializable {
 
     private Integer year;
-    private String createdBy;
+    private Integer createdBy;
     private OperationType operation;
 }

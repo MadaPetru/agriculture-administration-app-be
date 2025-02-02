@@ -25,7 +25,7 @@ public class FarmingLandEntity extends BaseEntity {
     @Column
     private String title;
     @Column(updatable = false)
-    private String createdBy;
+    private Integer createdBy;
     @Column
     @Enumerated(value = EnumType.STRING)
     private AreaUnitType areaUnitType;

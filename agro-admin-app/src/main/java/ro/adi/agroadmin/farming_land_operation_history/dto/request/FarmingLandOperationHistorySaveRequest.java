@@ -17,7 +17,7 @@ public class FarmingLandOperationHistorySaveRequest {
     private Float estimatedRevenue;
     private Float estimatedHarvest;
     private LocalDateTime appliedAt;
-    private String createdBy;
+    private Integer createdBy;
     private Integer farmingLandId;
     private WeightMeasureType estimatedHarvestMeasureType;
     private CurrencyType estimatedCostCurrencyType;

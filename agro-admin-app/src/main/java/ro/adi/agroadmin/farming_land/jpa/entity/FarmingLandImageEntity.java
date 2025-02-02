@@ -20,7 +20,7 @@ public class FarmingLandImageEntity extends BaseEntity {
     private Integer id;
 
     @Column(updatable = false)
-    private String createdBy;
+    private Integer createdBy;
 
     @Column
     private String fileName;

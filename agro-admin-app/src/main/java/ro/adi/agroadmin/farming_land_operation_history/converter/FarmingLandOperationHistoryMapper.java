@@ -15,6 +15,7 @@ import ro.adi.agroadmin.farming_land_operation_history.dto.request.FarmingLandOp
 import ro.adi.agroadmin.farming_land_operation_history.dto.response.FarmingLandOperationHistoryResponse;
 import ro.adi.agroadmin.farming_land_operation_history.jpa.entity.FarmingLandOperationHistoryEntity;
 import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitabilityPerYearUpdateRequest;
+import ro.adi.agroadmin.user.utils.UserUtils;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySaveRequestDto;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequestDto;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequestDto;
@@ -41,7 +42,7 @@ public interface FarmingLandOperationHistoryMapper {
         farmingLandOperationHistorySaveRequest.estimatedCostCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedCostCurrencyType().name()));
         farmingLandOperationHistorySaveRequest.plantType(PlantType.valueOf(requestDto.getPlantType().name()));
         farmingLandOperationHistorySaveRequest.estimatedRevenueCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedRevenueCurrencyType().name()));
-        farmingLandOperationHistorySaveRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        farmingLandOperationHistorySaveRequest.createdBy(UserUtils.getIdOfCurrentUser());
         return farmingLandOperationHistorySaveRequest.build();
     }
 
@@ -60,7 +61,7 @@ public interface FarmingLandOperationHistoryMapper {
         farmingLandOperationHistoryUpdateRequest.estimatedCostCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedCostCurrencyType().name()));
         farmingLandOperationHistoryUpdateRequest.estimatedHarvestMeasureType(WeightMeasureType.valueOf(requestDto.getEstimatedHarvestMeasureType().name()));
         farmingLandOperationHistoryUpdateRequest.estimatedRevenueCurrencyType(CurrencyType.valueOf(requestDto.getEstimatedRevenueCurrencyType().name()));
-        farmingLandOperationHistoryUpdateRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        farmingLandOperationHistoryUpdateRequest.createdBy(UserUtils.getIdOfCurrentUser());
         return farmingLandOperationHistoryUpdateRequest.build();
     }
 
@@ -97,7 +98,7 @@ public interface FarmingLandOperationHistoryMapper {
                 .build();
     }
 
-    default FarmingLandsProfitabilityPerYearUpdateRequest toFarmingLandsProfitabilityPerYearUpdateRequest(FarmingLandOperationHistoryResponse response, String issuer) {
+    default FarmingLandsProfitabilityPerYearUpdateRequest toFarmingLandsProfitabilityPerYearUpdateRequest(FarmingLandOperationHistoryResponse response, Integer issuer) {
 
         return FarmingLandsProfitabilityPerYearUpdateRequest.builder()
                 .year(response.getAppliedAt().getYear())

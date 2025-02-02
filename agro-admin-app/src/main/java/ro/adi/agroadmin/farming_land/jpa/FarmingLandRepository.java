@@ -14,5 +14,5 @@ public interface FarmingLandRepository extends JpaSpecificationExecutor<FarmingL
     Optional<FarmingLandEntity> findByTitle(String title);
 
     @Query(value = "select coalesce(sum(area),0) from FarmingLandEntity where createdBy = :createdBy and areaUnitType = :areaUnitType")
-    Float calculateTotalAreaByCreatedByAndAreaUnitType(String createdBy, AreaUnitType areaUnitType);
+    Float calculateTotalAreaByCreatedByAndAreaUnitType(Integer createdBy, AreaUnitType areaUnitType);
 }

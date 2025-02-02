@@ -14,9 +14,9 @@ import java.util.Optional;
 public interface FarmingLandsStatisticsPerOperationAndYearRepository extends JpaRepository<FarmingLandsStatisticsPerOperationAndYearEntity, Integer> {
 
     @Query("select entity.operation as operation,sum(entity.cost) as cost,sum(entity.revenue) as revenue from FarmingLandsStatisticsPerOperationAndYearEntity as entity where entity.year between :start and :from and entity.createdBy = :createdBy group by entity.operation")
-    List<ProfitabilityPerOperationView> findAllByYearBetweenAndCreatedBy(Integer start, Integer from, String createdBy);
+    List<ProfitabilityPerOperationView> findAllByYearBetweenAndCreatedBy(Integer start, Integer from, Integer createdBy);
 
-    int deleteByYearAndOperationAndCreatedBy(Integer year, OperationType operation, String createdBy);
+    int deleteByYearAndOperationAndCreatedBy(Integer year, OperationType operation, Integer createdBy);
 
-    Optional<FarmingLandsStatisticsPerOperationAndYearEntity> findFarmingLandStatisticsPerYearEntityByYearAndCreatedByAndOperation(Integer year, String createdBy, OperationType operation);
+    Optional<FarmingLandsStatisticsPerOperationAndYearEntity> findFarmingLandStatisticsPerYearEntityByYearAndCreatedByAndOperation(Integer year, Integer createdBy, OperationType operation);
 }

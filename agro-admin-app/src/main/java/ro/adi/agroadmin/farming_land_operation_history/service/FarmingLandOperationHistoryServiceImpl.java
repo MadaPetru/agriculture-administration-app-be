@@ -2,7 +2,6 @@ package ro.adi.agroadmin.farming_land_operation_history.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.exception.NotFoundException;
@@ -17,6 +16,7 @@ import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsM
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsPerYearAndOperationMapper;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerOperationResponse;
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerYearResponse;
+import ro.adi.agroadmin.user.utils.UserUtils;
 
 import java.util.List;
 
@@ -77,14 +77,14 @@ public class FarmingLandOperationHistoryServiceImpl implements FarmingLandOperat
 
     @Override
     public List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYearForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId) {
-        var createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        var createdBy = UserUtils.getIdOfCurrentUser();
         var entities = farmingLandOperationHistoryRepository.revenueAndCostsPerYearForFarmingLand(createdBy, startYear, endYear, farmingLandId);
         return farmingLandStatisticsMapper.toListFarmingLandsProfitabilityPerYearResponseFromView(entities);
     }
 
     @Override
     public List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperationsForFarmingLand(Integer startYear, Integer endYear, Integer farmingLandId) {
-        var createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        var createdBy = UserUtils.getIdOfCurrentUser();
         var entities = farmingLandOperationHistoryRepository.getProfitabilityPerOperationsForFarmingLand(createdBy, startYear, endYear, farmingLandId);
         return farmingLandStatisticsPerYearAndOperationMapper.toListFarmingLandsProfitabilityPerOperationResponse(entities);
     }

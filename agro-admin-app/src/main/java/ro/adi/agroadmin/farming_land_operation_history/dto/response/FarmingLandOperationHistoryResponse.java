@@ -19,7 +19,7 @@ public class FarmingLandOperationHistoryResponse {
     private Integer farmingLandId;
     private Float estimatedHarvest;
     private Float estimatedRevenue;
-    private String createdBy;
+    private Integer createdBy;
     private LocalDateTime appliedAt;
     private WeightMeasureType estimatedHarvestMeasureType;
     private CurrencyType estimatedCostCurrencyType;

@@ -12,7 +12,7 @@ public class FarmingLandUpdateRequest {
     private Integer version;
     private Float area;
     private String title;
-    private String createdBy;
+    private Integer createdBy;
     private AreaUnitType areaUnitType;
     private Float roughlyDistanceFromFarm;
     private DistanceUnitType roughlyDistanceFromFarmUnitType;

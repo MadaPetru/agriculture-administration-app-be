@@ -9,6 +9,6 @@ public class FarmingLandsProfitabilityPerYearUpdateRequest {
 
     private Float cost;
     private Float revenue;
-    private String createdBy;
+    private Integer createdBy;
     private Integer year;
 }

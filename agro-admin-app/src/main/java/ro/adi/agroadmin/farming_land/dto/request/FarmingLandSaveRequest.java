@@ -11,7 +11,7 @@ public class FarmingLandSaveRequest {
     private String title;
     private Float area;
     private Float roughlyDistanceFromFarm;
-    private String createdBy;
+    private Integer createdBy;
     private AreaUnitType areaUnitType;
     private DistanceUnitType roughlyDistanceFromFarmUnitType;
 }

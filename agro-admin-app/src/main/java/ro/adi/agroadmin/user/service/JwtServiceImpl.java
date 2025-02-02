@@ -8,14 +8,14 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ro.adi.agroadmin.common.entity.UserRole;
 import ro.adi.agroadmin.config.JwtProperties;
 import ro.adi.agroadmin.user.dto.request.JwtGenerationDetailsDto;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +25,9 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(JwtGenerationDetailsDto userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("roles", userDetails.getRoles());
+        return generateToken(claims, userDetails);
     }
 
     @Override
@@ -42,6 +44,14 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public Set<UserRole> extractRoles(String token) {
+        return extractClaim(token, claims -> {
+            List<String> rolesAsString = claims.get("roles", List.class);
+            return rolesAsString.stream().map(UserRole::valueOf).collect(Collectors.toSet());
+        });
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

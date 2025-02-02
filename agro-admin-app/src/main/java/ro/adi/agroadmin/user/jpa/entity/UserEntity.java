@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ro.adi.agroadmin.common.entity.BaseEntity;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Getter
@@ -15,6 +14,8 @@ import java.util.Collection;
 @Entity
 @Table(name = "user_entity")
 public class UserEntity extends BaseEntity implements UserDetails {
+
+    public static String EMAIL_FIELD_NAME = "email";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")

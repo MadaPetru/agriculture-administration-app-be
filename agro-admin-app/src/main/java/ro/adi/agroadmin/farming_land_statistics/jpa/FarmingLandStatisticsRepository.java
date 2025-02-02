@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface FarmingLandStatisticsRepository extends JpaSpecificationExecutor<FarmingLandsStatisticsPerYearEntity>, JpaRepository<FarmingLandsStatisticsPerYearEntity, Integer> {
 
-    int deleteByYearAndCreatedBy(Integer year, String createdBy);
+    int deleteByYearAndCreatedBy(Integer year, Integer createdBy);
 
-    List<FarmingLandsStatisticsPerYearEntity> findFarmingLandStatisticsPerYearEntitiesByCreatedByAndYearBetween(String createdBy, Integer startYear, Integer endYear);
+    List<FarmingLandsStatisticsPerYearEntity> findFarmingLandStatisticsPerYearEntitiesByCreatedByAndYearBetween(Integer createdBy, Integer startYear, Integer endYear);
 
-    Optional<FarmingLandsStatisticsPerYearEntity> findFarmingLandStatisticsPerYearEntityByYearAndCreatedBy(Integer year, String createdBy);
+    Optional<FarmingLandsStatisticsPerYearEntity> findFarmingLandStatisticsPerYearEntityByYearAndCreatedBy(Integer year, Integer createdBy);
 }

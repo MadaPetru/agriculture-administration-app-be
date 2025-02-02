@@ -11,5 +11,11 @@ import java.time.LocalDateTime;
 @Repository
 public interface FarmingLandImageRepository extends JpaRepository<FarmingLandImageEntity, Integer> {
 
-    Page<FarmingLandImageEntity> findAllByFarmingLandIdAndAtBetweenAndCreatedByOrderByAtDesc(Integer farmingLandId, LocalDateTime startDate, LocalDateTime endDate, String createdBy, Pageable pageable);
+    Page<FarmingLandImageEntity> findAllByFarmingLandIdAndCreatedByAndAtBetweenOrderByAtDesc(
+            Integer farmingLandId,
+            Integer createdBy,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Pageable pageable
+    );
 }

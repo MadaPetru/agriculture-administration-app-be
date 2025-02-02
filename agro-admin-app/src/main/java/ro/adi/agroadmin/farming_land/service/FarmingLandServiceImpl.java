@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.AreaUnitType;
@@ -17,6 +16,7 @@ import ro.adi.agroadmin.farming_land.jpa.FarmingLandImageRepository;
 import ro.adi.agroadmin.farming_land.jpa.FarmingLandRepository;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
 import ro.adi.agroadmin.farming_land.specification.FarmingLandSpecificationUtility;
+import ro.adi.agroadmin.user.utils.UserUtils;
 
 @Log4j2
 @Service
@@ -30,7 +30,7 @@ public class FarmingLandServiceImpl implements FarmingLandService {
 
     @Override
     public Float getAreaInHaOfFieldsAdministrated() {
-        var administratedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        var administratedBy = UserUtils.getIdOfCurrentUser();
         var areaInHa = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(administratedBy, AreaUnitType.HM);
         var areaInAr = farmingLandRepository.calculateTotalAreaByCreatedByAndAreaUnitType(administratedBy, AreaUnitType.AR);
         return areaInHa + areaInAr / 100;
@@ -76,15 +76,15 @@ public class FarmingLandServiceImpl implements FarmingLandService {
     public Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId) {
         var entity = farmingLandMapper.toFarmingLandImageEntity(request);
         entity.setFarmingLandId(farmingLandId);
-        var userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        entity.setCreatedBy(userEmail);
+        var userId = UserUtils.getIdOfCurrentUser();
+        entity.setCreatedBy(userId);
         return farmingLandImageRepository.save(entity).getId();
     }
 
     @Override
     public Page<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId) {
-        var userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndAtBetweenAndCreatedByOrderByAtDesc(farmingLandId, request.getStartDate(), request.getEndDate(), userEmail, request.getPageable());
+        var userId = UserUtils.getIdOfCurrentUser();
+        var entities = farmingLandImageRepository.findAllByFarmingLandIdAndCreatedByAndAtBetweenOrderByAtDesc(farmingLandId, userId, request.getStartDate(), request.getEndDate(), request.getPageable());
         return farmingLandMapper.toListFarmingLandImageResponse(entities);
     }
 

@@ -19,7 +19,7 @@ public class FarmingLandOperationHistoryEntity extends BaseEntity {
     @Column(columnDefinition = "integer", updatable = false, nullable = false)
     private Integer id;
     @Column(updatable = false)
-    private String createdBy;
+    private Integer createdBy;
     @Column
     private Float estimatedCost;
     @Column

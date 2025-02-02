@@ -11,6 +11,6 @@ public class FarmingLandsProfitabilityPerOperationAndYearUpdateRequest {
     private Float cost;
     private Integer year;
     private Float revenue;
-    private String createdBy;
+    private Integer createdBy;
     private OperationType operation;
 }

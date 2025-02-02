@@ -13,6 +13,7 @@ import ro.adi.agroadmin.farming_land_operation_history.service.FarmingLandOperat
 import ro.adi.agroadmin.farming_land_statistics.converter.FarmingLandStatisticsPerYearAndOperationMapper;
 import ro.adi.agroadmin.farming_land_statistics.service.FarmingLandStatisticsService;
 import ro.adi.agroadmin.farming_land_statistics.updates.statistics_per_operation_and_year.UpdateFarmingLandStatisticsPerYearAndOperationEmitter;
+import ro.adi.agroadmin.user.utils.UserUtils;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySaveRequestDto;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistorySearchRequestDto;
 import ro.adi.farming_land_operation_history.dto.request.FarmingLandOperationHistoryUpdateRequestDto;
@@ -59,7 +60,7 @@ public class FarmingLandOperationHistoryServiceInterceptorImpl implements Farmin
     @Override
     @Transactional
     public void deleteFarmingLandOperationHistoryById(Integer id) {
-        var issuer = SecurityContextHolder.getContext().getAuthentication().getName();
+        var issuer = UserUtils.getIdOfCurrentUser();
         var operationHistoryResponse = getFarmingLandOperationHistoryResponse(id);
         farmingLandOperationHistoryService.deleteFarmingLandOperationHistoryById(id);
         updateFarmingLandsProfitabilityStatisticsPerYear(issuer, operationHistoryResponse);
@@ -100,12 +101,12 @@ public class FarmingLandOperationHistoryServiceInterceptorImpl implements Farmin
         updateFarmingLandStatisticsPerYearAndOperationEmitter.emitUpdate(UPDATE_FIELD_OPERATION, updateRequestForNewOperation);
     }
 
-    private void updateFarmingLandsProfitabilityStatisticsPerYear(String issuer, FarmingLandOperationHistoryResponse operationHistoryResponse) {
+    private void updateFarmingLandsProfitabilityStatisticsPerYear(Integer issuer, FarmingLandOperationHistoryResponse operationHistoryResponse) {
         var farmingLandsProfitabilityPerYearSaveRequest = farmingLandOperationHistoryMapper.toFarmingLandsProfitabilityPerYearUpdateRequest(operationHistoryResponse, issuer);
         farmingLandStatisticsService.update(farmingLandsProfitabilityPerYearSaveRequest);
     }
 
-    private void updateFarmingLandsProfitabilityStatisticsPerOperationAndPerYear(String issuer, FarmingLandOperationHistoryResponse operationHistoryResponse) {
+    private void updateFarmingLandsProfitabilityStatisticsPerOperationAndPerYear(Integer issuer, FarmingLandOperationHistoryResponse operationHistoryResponse) {
         var farmingLandsProfitabilityPerYearSaveRequest = farmingLandStatisticsPerYearAndOperationMapper.toFarmingLandsProfitabilityPerYearAndOperationUpdateRequest(operationHistoryResponse, issuer);
         updateFarmingLandStatisticsPerYearAndOperationEmitter.emitUpdate(DELETE_FIELD_OPERATION, farmingLandsProfitabilityPerYearSaveRequest);
     }

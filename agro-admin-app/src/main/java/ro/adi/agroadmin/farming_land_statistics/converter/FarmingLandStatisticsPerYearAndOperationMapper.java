@@ -77,7 +77,7 @@ public interface FarmingLandStatisticsPerYearAndOperationMapper {
                 .build();
     }
 
-    default FarmingLandsProfitabilityPerOperationAndYearUpdateRequest toFarmingLandsProfitabilityPerYearAndOperationUpdateRequest(FarmingLandOperationHistoryResponse response, String issuer) {
+    default FarmingLandsProfitabilityPerOperationAndYearUpdateRequest toFarmingLandsProfitabilityPerYearAndOperationUpdateRequest(FarmingLandOperationHistoryResponse response, Integer issuer) {
 
         return FarmingLandsProfitabilityPerOperationAndYearUpdateRequest.builder()
                 .year(response.getAppliedAt().getYear())

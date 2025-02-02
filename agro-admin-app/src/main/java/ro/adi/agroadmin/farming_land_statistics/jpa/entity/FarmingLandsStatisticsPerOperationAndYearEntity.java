@@ -17,7 +17,7 @@ public class FarmingLandsStatisticsPerOperationAndYearEntity extends BaseEntity 
     @Id
     private Integer year;
     @Id
-    private String createdBy;
+    private Integer createdBy;
     @Id
     @Enumerated(value = EnumType.STRING)
     private OperationType operation;

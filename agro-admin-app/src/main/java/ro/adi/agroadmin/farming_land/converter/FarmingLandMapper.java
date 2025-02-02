@@ -11,6 +11,7 @@ import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandImageEntity;
+import ro.adi.agroadmin.user.utils.UserUtils;
 import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
@@ -28,7 +29,7 @@ public interface FarmingLandMapper {
         farmingLandSaveRequest.roughlyDistanceFromFarm(requestDto.getRoughlyDistanceFromFarm());
         farmingLandSaveRequest.areaUnitType(AreaUnitType.valueOf(requestDto.getAreaUnitType().name()));
         farmingLandSaveRequest.roughlyDistanceFromFarmUnitType(DistanceUnitType.valueOf(requestDto.getRoughlyDistanceFromFarmUnitType().name()));
-        farmingLandSaveRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        farmingLandSaveRequest.createdBy(UserUtils.getIdOfCurrentUser());
         return farmingLandSaveRequest.build();
     }
 
@@ -57,7 +58,7 @@ public interface FarmingLandMapper {
         farmingLandUpdateRequest.areaUnitType(AreaUnitType.valueOf(requestDto.getAreaUnitType().name()));
         farmingLandUpdateRequest.roughlyDistanceFromFarm(requestDto.getRoughlyDistanceFromFarm());
         farmingLandUpdateRequest.roughlyDistanceFromFarmUnitType(DistanceUnitType.valueOf(requestDto.getRoughlyDistanceFromFarmUnitType().name()));
-        farmingLandUpdateRequest.createdBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        farmingLandUpdateRequest.createdBy(UserUtils.getIdOfCurrentUser());
         return farmingLandUpdateRequest.build();
     }
 

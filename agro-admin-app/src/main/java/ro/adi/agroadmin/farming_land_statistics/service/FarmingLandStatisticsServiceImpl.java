@@ -11,6 +11,7 @@ import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfita
 import ro.adi.agroadmin.farming_land_statistics.dto.response.FarmingLandsProfitabilityPerYearResponse;
 import ro.adi.agroadmin.farming_land_statistics.jpa.FarmingLandStatisticsRepository;
 import ro.adi.agroadmin.farming_land_statistics.jpa.FarmingLandsStatisticsPerOperationAndYearRepository;
+import ro.adi.agroadmin.user.utils.UserUtils;
 
 import java.util.List;
 
@@ -26,14 +27,14 @@ public class FarmingLandStatisticsServiceImpl implements FarmingLandStatisticsSe
 
     @Override
     public List<FarmingLandsProfitabilityPerYearResponse> revenueAndCostsPerYear(Integer startYear, Integer endYear) {
-        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = UserUtils.getIdOfCurrentUser();
         var entities = farmingLandStatisticsRepository.findFarmingLandStatisticsPerYearEntitiesByCreatedByAndYearBetween(user, startYear, endYear);
         return farmingLandStatisticsMapper.toListFarmingLandsProfitabilityPerYearResponse(entities);
     }
 
     @Override
     public List<FarmingLandsProfitabilityPerOperationResponse> getProfitabilityPerOperations(Integer startYear, Integer endYear) {
-        var user = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = UserUtils.getIdOfCurrentUser();
         var entities = farmingLandsStatisticsPerOperationAndYearRepository.findAllByYearBetweenAndCreatedBy(startYear, endYear, user);
         return farmingLandStatisticsPerYearAndOperationMapper.toListFarmingLandsProfitabilityPerOperationResponse(entities);
     }

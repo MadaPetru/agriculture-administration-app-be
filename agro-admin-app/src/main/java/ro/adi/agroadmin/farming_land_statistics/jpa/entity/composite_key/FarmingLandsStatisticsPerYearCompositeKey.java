@@ -12,5 +12,5 @@ import java.io.Serializable;
 public class FarmingLandsStatisticsPerYearCompositeKey implements Serializable {
 
     private Integer year;
-    private String createdBy;
+    private Integer createdBy;
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.util.Pair;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.adi.agroadmin.common.entity.OperationType;
@@ -19,6 +18,7 @@ import ro.adi.agroadmin.farming_land_statistics.dto.request.FarmingLandsProfitab
 import ro.adi.agroadmin.farming_land_statistics.service.FarmingLandStatisticsService;
 import ro.adi.agroadmin.farming_land_statistics.updates.statistics_per_operation_and_year.UpdateFarmingLandStatisticsPerYearAndOperationEmitter;
 import ro.adi.agroadmin.file.FileService;
+import ro.adi.agroadmin.user.utils.UserUtils;
 import ro.adi.farming_land.dto.request.*;
 import ro.adi.farming_land.dto.response.FarmingLandImageBlobResponseDto;
 import ro.adi.farming_land.dto.response.FarmingLandResponseDto;
@@ -69,7 +69,7 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
         var operations = farmingLandOperationHistoryService.findOperationHistoriesByFarmingLandId(id);
         farmingLandOperationHistoryService.deleteFarmingLandOperationHistoriesByFarmingLandId(id);
         farmingLandService.deleteFarmingLandById(id);
-        var issuer = SecurityContextHolder.getContext().getAuthentication().getName();
+        var issuer = UserUtils.getIdOfCurrentUser();
         updateFarmingLandStatisticsPerYear(operations, issuer);
         updateFarmingLandStatisticsPerOperationAndYear(operations, issuer);
     }
@@ -146,19 +146,19 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
         return imageToSearchAfterThatAreNotInCache;
     }
 
-    private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {
+    private void updateFarmingLandStatisticsPerOperationAndYear(List<FarmingLandOperationHistoryResponse> operations, Integer issuer) {
         var updateRequestsForStatisticsPerOperationAndYearForFarmingLands = getUpdateRequestsForFarmingLandStatisticsPerOperationAndYear(issuer, operations);
         updateRequestsForStatisticsPerOperationAndYearForFarmingLands.forEach(updateRequestPerYearAndOperation -> {
             updateFarmingLandStatisticsPerYearAndOperationEmitter.emitUpdate(DELETE_FIELD, updateRequestPerYearAndOperation);
         });
     }
 
-    private void updateFarmingLandStatisticsPerYear(List<FarmingLandOperationHistoryResponse> operations, String issuer) {
+    private void updateFarmingLandStatisticsPerYear(List<FarmingLandOperationHistoryResponse> operations, Integer issuer) {
         var updateRequestsForStatisticsPerYearForFarmingLands = getUpdateRequestsForFarmingLandStatisticsPerYear(issuer, operations);
         updateRequestsForStatisticsPerYearForFarmingLands.forEach(farmingLandStatisticsService::update);
     }
 
-    private Collection<FarmingLandsProfitabilityPerYearUpdateRequest> getUpdateRequestsForFarmingLandStatisticsPerYear(String issuer, List<FarmingLandOperationHistoryResponse> operations) {
+    private Collection<FarmingLandsProfitabilityPerYearUpdateRequest> getUpdateRequestsForFarmingLandStatisticsPerYear(Integer issuer, List<FarmingLandOperationHistoryResponse> operations) {
         var updateRequestsPerYear = new HashMap<Integer, FarmingLandsProfitabilityPerYearUpdateRequest>();
         operations.forEach(operation -> {
             var year = operation.getAppliedAt().getYear();
@@ -179,7 +179,7 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
         return updateRequestsPerYear.values();
     }
 
-    private Collection<FarmingLandsProfitabilityPerOperationAndYearUpdateRequest> getUpdateRequestsForFarmingLandStatisticsPerOperationAndYear(String issuer, List<FarmingLandOperationHistoryResponse> operations) {
+    private Collection<FarmingLandsProfitabilityPerOperationAndYearUpdateRequest> getUpdateRequestsForFarmingLandStatisticsPerOperationAndYear(Integer issuer, List<FarmingLandOperationHistoryResponse> operations) {
         var updateRequestsPerYear = new HashMap<Pair<Integer, OperationType>, FarmingLandsProfitabilityPerOperationAndYearUpdateRequest>();
         operations.forEach(operation -> {
             var year = operation.getAppliedAt().getYear();

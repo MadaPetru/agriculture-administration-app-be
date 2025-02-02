@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -13,4 +16,5 @@ public class SessionDetailsResponseDto {
 
     private String token;
     private long expiresIn;
+    private Set<UserRoleDto> roles = new HashSet<>();
 }

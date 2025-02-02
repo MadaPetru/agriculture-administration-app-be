@@ -17,7 +17,7 @@ public class FarmingLandsStatisticsPerYearEntity extends BaseEntity {
     @Id
     private Integer year;
     @Id
-    private String createdBy;
+    private Integer createdBy;
     @Column
     private Float cost;
     @Column

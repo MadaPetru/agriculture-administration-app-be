@@ -15,7 +15,7 @@ public class FarmingLandOperationHistoryUpdateRequest {
     private Integer id;
     private Integer version;
     private Date appliedAt;
-    private String createdBy;
+    private Integer createdBy;
     private OperationType operation;
     private Float estimatedCost;
     private Integer farmingLandId;
