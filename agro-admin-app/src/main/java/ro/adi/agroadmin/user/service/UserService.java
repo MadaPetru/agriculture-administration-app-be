@@ -19,6 +19,7 @@ public interface UserService {
 
     void updateUser(UpdateUserRequest request);
     String findUserEmailById(Integer id);
+    boolean existsUserByEmail(String email);
 
     void deleteUser(Integer id);
 

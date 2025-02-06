@@ -14,8 +14,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaSpecificationExecutor<UserEntity>, JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByEmail(String email);
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE UserEntity user SET user.email = :email WHERE user.id = :id")
-    void updateUserEmail(Integer id,String email);
+    boolean existsUserEntityByEmail(String email);
 }

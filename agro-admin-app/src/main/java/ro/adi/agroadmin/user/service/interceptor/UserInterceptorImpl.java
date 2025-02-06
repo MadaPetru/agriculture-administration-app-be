@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ro.adi.agroadmin.user.converter.UserMapper;
+import ro.adi.agroadmin.user.exception.UserEmailAlreadyUsedException;
 import ro.adi.agroadmin.user.service.JwtService;
 import ro.adi.agroadmin.user.service.UserService;
 import ro.adi.user.dto.request.LoginUserRequestDto;
@@ -25,6 +26,11 @@ public class UserInterceptorImpl implements UserServiceInterceptor {
     @Override
     public UserRegisterResponseDto register(RegisterUserRequestDto requestDto) {
         var request = userMapper.toRegisterUserRequest(requestDto);
+        var userEmail = request.getEmail();
+        if(userService.existsUserByEmail(userEmail)){
+            var message = String.format("User with email: %s already used.", userEmail);
+            throw new UserEmailAlreadyUsedException(message);
+        }
         var response = userService.register(request);
         var jwtDetails = userMapper.toJwtGenerationDetailsDto(response);
         var jwt = jwtService.generateToken(jwtDetails);

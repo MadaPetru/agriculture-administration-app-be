@@ -101,6 +101,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsUserByEmail(String email) {
+        return userRepository.existsUserEntityByEmail(email);
+    }
+
+    @Override
     @Transactional
     public void deleteUser(Integer id) {
         userRoleRepository.deleteAllById_UserId(id);
