@@ -15,6 +15,7 @@ import ro.adi.agroadmin.common.entity.DistanceUnitType;
 public class FarmingLandEntity extends BaseEntity {
     public static String ID_FILED_NAME = "id";
     public static String TITLE_FILED_NAME = "title";
+    public static String CREATED_BY_FILED_NAME = "createdBy";
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "farming_land_id_generator")
     @SequenceGenerator(name = "farming_land_id_generator", sequenceName = "farming_land_seq", allocationSize = 1)
