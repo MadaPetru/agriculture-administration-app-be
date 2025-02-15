@@ -1,4 +1,4 @@
-name: Trigger auto deployment for agro-admin-be
+name: Trigger auto deployment for agro-admin-be-free
 
 # When this action will be executed
 on:
@@ -39,7 +39,7 @@ jobs:
           registryUrl: docker.io
           registryUsername: ${{ secrets.AGROADMINBE_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.AGROADMINBE_REGISTRY_PASSWORD }}
-          containerAppName: agro-admin-be
+          containerAppName: agro-admin-be-free
           resourceGroup: agro-admin
           imageToBuild: caleamare/agro-admin-be:${{ github.sha }}
           _buildArgumentsKey_: |
