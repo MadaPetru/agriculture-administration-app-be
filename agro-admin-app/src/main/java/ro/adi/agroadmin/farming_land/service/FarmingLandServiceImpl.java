@@ -15,8 +15,15 @@ import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
 import ro.adi.agroadmin.farming_land.jpa.FarmingLandImageRepository;
 import ro.adi.agroadmin.farming_land.jpa.FarmingLandRepository;
 import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandEntity;
+import ro.adi.agroadmin.farming_land.jpa.entity.FarmingLandImageEntity;
 import ro.adi.agroadmin.farming_land.specification.FarmingLandSpecificationUtility;
 import ro.adi.agroadmin.user.utils.UserUtils;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Log4j2
 @Service
@@ -73,12 +80,23 @@ public class FarmingLandServiceImpl implements FarmingLandService {
 
     @Override
     @Transactional
-    public Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId) {
-        var entity = farmingLandMapper.toFarmingLandImageEntity(request);
-        entity.setFarmingLandId(farmingLandId);
+    public Map<Integer, String> uploadFile(UploadFieldImageRequest request, Integer farmingLandId) {
         var userId = UserUtils.getIdOfCurrentUser();
-        entity.setCreatedBy(userId);
-        return farmingLandImageRepository.save(entity).getId();
+        var entities = new ArrayList<FarmingLandImageEntity>();
+        var contentMappedByFileName = new HashMap<String, String>();
+        request.getImages().forEach(image -> {
+            contentMappedByFileName.put(image.getFileName(), image.getContent());
+            var entity = new FarmingLandImageEntity();
+            entity.setCreatedBy(userId);
+            entity.setFarmingLandId(farmingLandId);
+            entity.setAt(LocalDateTime.ofInstant(request.getAt().toInstant(), ZoneId.of("UTC")));
+            entity.setFileName(image.getFileName());
+            entities.add(entity);
+        });
+        farmingLandImageRepository.saveAll(entities);
+        var contentMappedById = new HashMap<Integer, String>();
+        entities.forEach(entity -> contentMappedById.put(entity.getId(), contentMappedByFileName.get(entity.getFileName())));
+        return contentMappedById;
     }
 
     @Override

@@ -6,6 +6,8 @@ import ro.adi.agroadmin.farming_land.dto.request.*;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandImageResponse;
 import ro.adi.agroadmin.farming_land.dto.response.FarmingLandResponse;
 
+import java.util.Map;
+
 public interface FarmingLandService {
 
     Float getAreaInHaOfFieldsAdministrated();
@@ -20,7 +22,7 @@ public interface FarmingLandService {
 
     FarmingLandResponse findFarmingLandByTitle(String title);
 
-    Integer uploadFile(UploadFieldImageRequest request, Integer farmingLandId);
+    Map<Integer, String> uploadFile(UploadFieldImageRequest request, Integer farmingLandId);
 
     Page<FarmingLandImageResponse> listFiles(ListFieldImageRequest request, Integer farmingLandId);
 

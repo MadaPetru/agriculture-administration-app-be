@@ -84,8 +84,8 @@ public class FarmingLandServiceInterceptorImpl implements FarmingLandServiceInte
     @Transactional
     public void uploadFile(UploadFieldImageRequestDto requestDto, Integer farmingLandId) {
         var request = farmingLandMapper.toUploadFieldImageRequest(requestDto);
-        var id = farmingLandService.uploadFile(request, farmingLandId);
-        fileService.uploadBlob(id, request.getContent());
+        var contentMappedById = farmingLandService.uploadFile(request, farmingLandId);
+        contentMappedById.forEach(fileService::uploadBlob);
     }
 
     @Override
