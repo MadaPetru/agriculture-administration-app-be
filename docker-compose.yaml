@@ -13,6 +13,22 @@ services:
 #      - "8080:8080"
 #    networks:
 #      - agro-admin-network
+#  db:
+#    image: mcr.microsoft.com/mssql/server:2019-latest
+#    restart: always
+#    container_name: agro-admin-db
+#    networks:
+#      - agro-admin-network
+#    ports:
+#      - '1433:1433'
+#    environment:
+#      # Username is 'SA'
+#      MSSQL_SA_PASSWORD: 'passwordAAA111!!!'
+#      ACCEPT_EULA: 'Y'
+#      MSSQL_TLS_VERSION: '1.0'  # Disables enforcing higher TLS versions
+#      MSSQL_DISABLE_ENCRYPTION: 'true'  # Disables encryption (optional, may not always apply)
+#    volumes:
+#      - sqlserver:/var/opt/mssql
   db:
     container_name: agriculture-administration-db-container
     image: postgres
