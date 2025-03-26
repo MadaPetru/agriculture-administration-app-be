@@ -12,11 +12,11 @@ public class BlobStorageConfig {
 
     private final BlobStorageProperties blobStorageProperties;
 
-    @Bean
-    public BlobServiceClient blobServiceClient() {
-        return new BlobServiceClientBuilder()
-                .endpoint(blobStorageProperties.getBlobEndpoint())
-                .credential(new com.azure.storage.common.StorageSharedKeyCredential(blobStorageProperties.getAccountName(), blobStorageProperties.getAccountKey()))
-                .buildClient();
-    }
+//    @Beanr
+//    public BlobServiceClient blobServiceClient() {
+//        return new BlobServiceClientBuilder()
+//                .endpoint(blobStorageProperties.getBlobEndpoint())
+//                .credential(new com.azure.storage.common.StorageSharedKeyCredential(blobStorageProperties.getAccountName(), blobStorageProperties.getAccountKey()))
+//                .buildClient();
+//    }
 }
