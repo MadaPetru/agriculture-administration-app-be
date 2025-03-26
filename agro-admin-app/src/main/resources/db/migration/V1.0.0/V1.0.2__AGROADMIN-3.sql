@@ -4,8 +4,8 @@ CREATE TABLE user_entity
     email      varchar(100) not null,
     password   varchar(100) not null,
     full_name  varchar(100) not null,
-    created_at datetime     not null,
-    updated_at datetime     not null,
+    created_at timestamp    not null,
+    updated_at timestamp    not null,
     version    int          not null
 );
 

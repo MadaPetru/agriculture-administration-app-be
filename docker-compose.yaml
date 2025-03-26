@@ -14,21 +14,21 @@ services:
 #    networks:
 #      - agro-admin-network
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: agriculture-administration-db-container
+    image: postgres
     restart: always
-    container_name: agro-admin-db
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: adi
+      POSTGRES_DB: agro-admin-db
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
     networks:
       - agro-admin-network
-    ports:
-      - '1433:1433'
-    environment:
-      # Username is 'SA'
-      MSSQL_SA_PASSWORD: 'passwordAAA111!!!'
-      ACCEPT_EULA: 'Y'
-      MSSQL_TLS_VERSION: '1.0'  # Disables enforcing higher TLS versions
-      MSSQL_DISABLE_ENCRYPTION: 'true'  # Disables encryption (optional, may not always apply)
-    volumes:
-      - sqlserver:/var/opt/mssql
   azure_blob_storage:
     image: mcr.microsoft.com/azure-storage/azurite
     restart: always
@@ -61,6 +61,7 @@ services:
 #    volumes:
 #      - ./keycloak:/opt/jboss/keycloak/standalone/data/
 volumes:
+  postgres:
   sqlserver:
   keycloak:
 networks:

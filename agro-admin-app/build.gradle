@@ -8,7 +8,8 @@ dependencies {
     implementation libs.bundles.mapstruct
     annotationProcessor libs.bundles.mapstruct
     implementation libs.azure.sql.dbc
-    implementation libs.flyway.database.sqlserver
+    implementation libs.flyway.database.postgresql
+    implementation libs.database.postgresql
     implementation libs.jpa
 //    implementation libs.security.config
     implementation libs.security.core

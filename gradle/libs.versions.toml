@@ -8,7 +8,11 @@ mapstruct-processor = "1.5.5.Final"
 tenserflow = "1.0.0"
 azure-blob = "12.29.0"
 jwt = "0.12.6"
+database-postgresql = "42.7.4"
 [libraries]
+jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-jdbc" }
+flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql" }
+database-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "database-postgresql" }
 tenserflow = { group = "org.tensorflow", name = "tensorflow-core-api", version.ref = "tenserflow" }
 #oauth2-resource-server = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server" }
 security-core = { group = "org.springframework.boot", name = "spring-boot-starter-security" }

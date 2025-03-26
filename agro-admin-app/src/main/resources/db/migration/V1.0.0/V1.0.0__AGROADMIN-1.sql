@@ -1,14 +1,14 @@
 CREATE TABLE farming_land
 (
     id                                   int primary key,
-    created_by                           varchar(100) not null,
+    created_by                           int          not null,
     title                                varchar(100) not null,
     area                                 float        not null,
     area_unit_type                       varchar(100),
     roughly_distance_from_farm           float        not null,
     roughly_distance_from_farm_unit_type varchar(100),
-    created_at                           datetime    not null,
-    updated_at                           datetime    not null,
+    created_at                           timestamp    not null,
+    updated_at                           timestamp    not null,
     version                              int          not null
 );
 
@@ -26,14 +26,14 @@ CREATE TABLE farming_land_operation_history
 (
     id                              int primary key,
     farming_land_id                 int          not null,
-    created_by                      varchar(100) not null,
+    created_by                      int          not null,
     operation                       varchar(100) not null,
     estimated_cost                  float        not null,
     estimated_harvest               float,
     estimated_revenue               float,
-    created_at                      datetime    not null,
-    updated_at                      datetime    not null,
-    applied_at                      datetime    not null,
+    created_at                      timestamp    not null,
+    updated_at                      timestamp    not null,
+    applied_at                      timestamp    not null,
     estimated_harvest_measure_type  varchar(100),
     estimated_cost_currency_type    varchar(100) not null,
     estimated_revenue_currency_type varchar(100),
@@ -51,13 +51,13 @@ CREATE SEQUENCE farming_land_operation_history_seq
 
 CREATE TABLE farming_land_statistics_per_year
 (
-    cost       float        not null,
-    revenue    float        not null,
+    cost       float     not null,
+    revenue    float     not null,
     year       int,
-    created_at datetime    not null,
-    updated_at datetime    not null,
-    created_by varchar(100) not null,
-    version    int          not null,
+    created_at timestamp not null,
+    updated_at timestamp not null,
+    created_by int       not null,
+    version    int       not null,
     PRIMARY KEY (year, created_by)
 );
 
@@ -67,9 +67,9 @@ CREATE TABLE farming_land_statistics_per_operation_and_year
     cost       float        not null,
     revenue    float        not null,
     year       int,
-    created_at datetime    not null,
-    updated_at datetime    not null,
-    created_by varchar(100) not null,
+    created_at timestamp    not null,
+    updated_at timestamp    not null,
+    created_by int          not null,
     version    int          not null,
     PRIMARY KEY (year, operation, created_by)
 );
