@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-    private final BlobServiceClient blobServiceClient;
+    private BlobServiceClient blobServiceClient;
     private final BlobStorageProperties blobStorageProperties;
 
     public void uploadBlob(Integer id, String content) {
