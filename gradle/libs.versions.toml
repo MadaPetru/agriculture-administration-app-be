@@ -24,6 +24,7 @@ jwt-api = { group = "io.jsonwebtoken", name = "jjwt-api", version.ref = "jwt" }
 jwt-impl = { group = "io.jsonwebtoken", name = "jjwt-impl", version.ref = "jwt" }
 jwt-jackson = { group = "io.jsonwebtoken", name = "jjwt-jackson", version.ref = "jwt" }
 starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
 data-commons = { group = "org.springframework.data", name = "spring-data-commons" }
 flyway-database-sqlserver = { group = "org.flywaydb", name = "flyway-sqlserver" }
 lombok = { group = "org.projectlombok", name = "lombok" }

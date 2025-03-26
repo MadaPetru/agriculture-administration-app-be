@@ -33,6 +33,7 @@ public class SecurityConfig {
                                         "/v1/users/register",
                                         "/v1/users/login",
                                         "/v1/api-docs",
+                                        "/actuator/**",
                                         "/v1/api-docs/**",
                                         "/swagger-resources",
                                         "/swagger-resources/**",
